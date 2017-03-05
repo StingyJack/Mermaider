@@ -240,3 +240,15 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+/Mermaider.UI/Less/reboot/*.less
+/Mermaider.UI/Less/reboot/mixins/*.less
+!/Mermaider.UI/Less/reboot/bootstrap.less
+
+/Mermaider.UI/bower_components
+/Mermaider.UI/node_components
+
+/Mermaider.UI/wwwroot/css/
+/Mermaider.UI/wwwroot/js/
+
+

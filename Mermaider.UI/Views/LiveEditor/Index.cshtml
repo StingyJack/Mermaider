@@ -1,0 +1,106 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<script src="@Url.Content("~/js/mermaid.js")"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 center">
+            <h2>Mermaidier</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 left">
+            <text class="text-muted">
+                Enter your flowchart here and click "Refresh Diagram" to redraw it
+            </text>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+
+            <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
+graph TD
+    A-->B("<b>nice</b> <i>display</i> value")
+    B-->C{"with formatting?"}
+    C-->|Yes|D1["html creole and others"]
+    C-->|No|E2("or plain css styling")
+
+    subgraph This
+     D1-->E1("...or some other stuff")
+     E1-->F1((" if you feel like it"))
+    end
+
+    subgraph Or That
+     E2-->F2>"and weird shapes"]
+    end 
+
+    F1-->Z("the end")    
+    F2-->Z
+
+classDef styled fill:#f9f,stroke:#333,stroke-width:4px;
+
+class F2 styled
+
+
+        </textarea>
+            <div>
+                <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
+            </div>
+
+            <div class="btn-toolbar">
+                <input type="button" value="Refresh Diagram" class="btn btn-primary" onclick="return attemptGraphRendering();" />
+                <input type="button" value="Render as Image" class="btn btn-primary" onclick="return renderAsImage();" />
+            </div>
+
+        </div>
+        <div class="mermaidChartContainer">
+
+            <div class="row">
+                <div id="mermaidPreview" class="mermaid">
+                    Preview goes here
+                </div>
+            </div>
+            <div class="row">
+                <div id="errParse" class="validation-summary-errors"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    var mermaidInitted = false;
+
+    function attemptGraphRendering() {
+
+        if (mermaidInitted === false)
+        {
+            mermaid.init({ startOnLoad: false });
+            mermaid.parseError = function(err,hash){
+                $('#errParse').value(err);
+            };
+            mermaidInitted = true;
+        }
+        var ele = $('#mermaidDataEntryField');
+        var graphText = ele.val();
+        var parseable = mermaidAPI.parse(graphText);
+        if (parseable) {
+            var graph = mermaid.mermaidAPI.render(graphText);
+            $('#mermaidPreview').html(graph);
+
+        }
+        else{
+            $('#errParse').value("Couldn't parse");
+
+        }
+    }
+
+    function renderAsImage(){
+
+    }
+
+</script>

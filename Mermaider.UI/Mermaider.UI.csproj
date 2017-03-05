@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Styles\Site.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\**\*;web.config">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -21,19 +25,8 @@
     
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.0" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />
-    
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1" />
-    
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.1" />
-    
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.0" />
-  
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.0" />
   
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.0" />
   
@@ -41,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Less\reboot\mixins\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

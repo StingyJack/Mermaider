@@ -1,7 +1,6 @@
 ﻿namespace Mermaider.UI
-
 {
-    using IO;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -27,7 +26,7 @@
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,7 +34,7 @@
         {
             loggerFactory.AddConsole();
             loggerFactory.AddDebug();
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -44,16 +43,17 @@
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            app.UseMvcWithDefaultRoute();
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        "default",
-            //        "{controller=Home}/{action=Index}/{id?}");
-            //});
+            app.UseStaticFiles();
 
-            app.Run(async context => { await context.Response.WriteAsync("Hello World!"); });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    "default",
+                    "{controller=LiveEditor}/{action=Index}/{id?}");
+            });
+            app.Run(async context => { await context.Response.WriteAsync("Starting up Mermaider... (or a script/css/image/other resource file path is wrong)"); });
         }
     }
 }
