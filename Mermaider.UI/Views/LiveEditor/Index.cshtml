@@ -65,9 +65,16 @@ class F2 styled
                 </div>
             </div>
             <div class="row">
+                <div id="mermaidImageLinkContainer">
+                    <a href="images/img.jpg" target="_blank">Link Goes Here</a>
+                </div>
+                <div id="mermaidRenderedImageContainer">
+                    <img src="images/img.png" alt="ShouldBeImage" />
+                </div>
+            </div>
+            <div class="row">
                 <div id="errParse" class="validation-summary-errors"></div>
             </div>
-
         </div>
     </div>
 </div>
@@ -85,13 +92,12 @@ class F2 styled
             };
             mermaidInitted = true;
         }
-        var ele = $('#mermaidDataEntryField');
-        var graphText = ele.val();
+        
+        var graphText = $('#mermaidDataEntryField').val();
         var parseable = mermaidAPI.parse(graphText);
         if (parseable) {
             var graph = mermaid.mermaidAPI.render(graphText);
             $('#mermaidPreview').html(graph);
-
         }
         else{
             $('#errParse').value("Couldn't parse");
@@ -99,8 +105,27 @@ class F2 styled
         }
     }
 
-    function renderAsImage(){
+    function renderAsImage() {
 
+        var graphText = $('#mermaidDataEntryField').val();
+
+        $.ajax({
+        url: '@Url.Action("RenderAsPng", "LiveEditor")',
+        type: 'GET',
+        dataType: 'json',
+        // we set cache: false because GET requests are often cached by browsers
+        // IE is particularly aggressive in that respect
+        cache: false,
+        data: { graphText: graphText },
+        success: function (renderResult) {
+            var link = '<a href="images/img.jpg" target="_blank">Link Goes Here</a>';
+            var imageLink = '<img src="images/img.png" alt="ShouldBeImage" />';
+
+            $('#mermaidImageLinkContainer').html(link);
+            $('#mermaidRenderedImageContainer').html(link);
+            
+        }
+    });
     }
 
 </script>

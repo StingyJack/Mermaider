@@ -5,9 +5,12 @@ or be a general static image host if there isnt one to forward the generated one
 -  live editor can do a graph exactly once before mermaid api shits the bed
 - can get output from unit test from the command line
 
-# next up
+## next up
  - figure out the "get image" link
  
+## known broken
+ - mermaid or browserify or someone shits the bed https://github.com/knsv/mermaid/issues/478
+ - png button not wired
 
 ## Work in progress
 

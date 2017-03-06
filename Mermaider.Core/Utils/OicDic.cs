@@ -1,4 +1,4 @@
-﻿namespace Mermaider.UI
+﻿namespace Mermaider.Core.Utils
 {
     using System;
     using System.Collections.Generic;

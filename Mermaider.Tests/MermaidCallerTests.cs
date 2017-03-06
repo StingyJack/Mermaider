@@ -1,26 +1,26 @@
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-
-namespace Mermaider.UI.Tests
+namespace Mermaider.Tests
 {
+    using System;
     using System.IO;
-    using IO;
-    using Mermaider.UI;
+    using System.Linq;
+    using Core;
+    using Core.IO;
+    using Core.Utils;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class MermaidCallerTests
     {
         private const string SIMPLE_GRAPH = "graph TD \n\t A-->B";
-        private string _rootPath = AppContext.BaseDirectory + "\\outDir";
-        private string _tempFolder = Path.GetTempPath();
+        private readonly string _rootPath = AppContext.BaseDirectory + "\\outDir";
+        private readonly string _tempFolder = Path.GetTempPath();
 
         [TestMethod]
         public void GetSvg()
         {
-            var mc = new MermaidCaller(_rootPath, _tempFolder);
+            var mc = new MermaidRenderer(_rootPath, _tempFolder);
 
-            var result = mc.GetSvg(SIMPLE_GRAPH);
+            var result = mc.RenderAsSvg(SIMPLE_GRAPH);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Errors.Any() == false, result.Errors.ToSingle());
@@ -33,9 +33,9 @@ namespace Mermaider.UI.Tests
         [TestMethod]
         public void GetImage()
         {
-            var mc = new MermaidCaller(_rootPath, _tempFolder);
+            var mc = new MermaidRenderer(_rootPath, _tempFolder);
 
-            var result = mc.GetImage(SIMPLE_GRAPH);
+            var result = mc.RenderAsImage(SIMPLE_GRAPH);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Errors.Any() == false, result.Errors.ToSingle());

@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild='clean, repack-bootstrap, move-content-to-wwwroot, browserify-mermaid' Clean='clean' />
+﻿/// <binding AfterBuild='clean, repack-bootstrap, move-content-to-wwwroot, browserify-mermaid' Clean='clean' ProjectOpened='clean' />
 /*
 This file is the main entry point for defining Gulp tasks and using Gulp plugins.
 Click here to learn more. https://go.microsoft.com/fwlink/?LinkId=518007
@@ -38,7 +38,13 @@ gulp.task('lint-scripts', function () {
 
 // Cleanups
 gulp.task('clean', function () {
-    return del([destScriptPath + '/**/*', destCssPath + '/**/*']);
+
+    return del([destScriptPath + '/**/*'
+        , destCssPath + '/**/*'
+        , 'Less/reboot/mixin/*'
+        , '!Less/reboot/mixin/'
+        , 'less/reboot/*'
+        , '!less/reboot/bootstrap.less']);
 });
 
 //push non-mofifying content 
@@ -87,4 +93,3 @@ gulp.task('repack-bootstrap', ['refresh-bootstrap-sources'], function() {
         .pipe(gulp.dest('styles'));
 
 });
-

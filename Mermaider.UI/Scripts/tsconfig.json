@@ -6,7 +6,8 @@
     "target": "es5"
   },
   "files": [
-    "./app.ts"
+    "./app.ts",
+    "./RenderResult.ts"
   ],
   "compileOnSave": true
 }

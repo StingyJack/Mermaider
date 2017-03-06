@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Mermaider.UI
+﻿namespace Mermaider.Core.Utils
 {
+    using System.Collections.Generic;
+
     public static class Extensions
     {
         /// <summary>
@@ -14,5 +14,25 @@ namespace Mermaider.UI
         {
             return string.Join(separator, list);
         }
+
+        /// <summary>
+        ///     True if only one of the two are empty
+        /// </summary>
+        /// <param name="firstValue"></param>
+        /// <param name="secondValue"></param>
+        /// <returns></returns>
+        public static bool OnlyOneEmpty(this string firstValue, string secondValue)
+        {
+            var firstIsEmpty= string.IsNullOrWhiteSpace(firstValue);
+            var secondIsEmpty = string.IsNullOrWhiteSpace(secondValue);
+
+            if (firstIsEmpty && secondIsEmpty)
+            {
+                return false;
+            }
+
+            return firstIsEmpty != false || secondIsEmpty != false;
+        }
+
     }
 }

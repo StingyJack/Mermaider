@@ -1,17 +1,19 @@
-﻿namespace Mermaider.UI
+﻿namespace Mermaider.Core
 {
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Abstractions;
     using IO;
+    using Utils;
 
-    public class MermaidCaller
+    public class MermaidRenderer : IMermaidRenderer
     {
         #region "fields and consts"
 
         private FileUtils _fileUtils;
-        private readonly string _tempDirectory;
+        private readonly string _graphFileDirectory;
         private readonly string _outputDirectory;
         private readonly string nodeCommandPath = "node"; //assuming its in the system path
         private readonly string mermaidPath = @"C:\Users\Andrew\AppData\Roaming\npm\node_modules\mermaid\bin\mermaid.js";
@@ -23,20 +25,32 @@
 
         #region  "initialization"
 
-        public MermaidCaller(string outputDirectory, string tempDir)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputDirectory"></param>
+        /// <param name="tempDir"></param>
+        public MermaidRenderer(string outputDirectory, string tempDir)
         {
             _outputDirectory = Path.GetFullPath(outputDirectory);
-            _tempDirectory = Path.GetFullPath(tempDir);
-            GetFileUtils().CreateDir(_outputDirectory, _tempDirectory);
+            _graphFileDirectory = Path.GetFullPath(tempDir);
+            if (Directory.Exists(_outputDirectory) == false)
+            {
+                throw new DirectoryNotFoundException($"no {_outputDirectory} found");
+            }
+            if (Directory.Exists(_graphFileDirectory) == false)
+            {
+                throw new DirectoryNotFoundException($"no {_graphFileDirectory} found");
+            }
         }
 
         #endregion //#region  "initialization"
 
         #region "public members"
 
-        public MermaidResult GetSvg(string inputText)
+        public MermaidRenderResult RenderAsSvg(string inputText)
         {
-            var graphFileName = WriteGraphTempFile(inputText);
+            var graphFileName = WriteGraphFile(inputText);
             var args = BuildMermaidArgs(graphFileName, MermaidOutput.Svg, false);
             var expectedFilePath = $"{graphFileName}{EXTENSION_SVG}";
 
@@ -53,11 +67,12 @@
         }
 
 
-        public MermaidResult GetImage(string inputText)
+        public MermaidRenderResult RenderAsImage(string inputText)
         {
-            var graphFileName = WriteGraphTempFile(inputText);
-            var args = $"\"{mermaidPath}\" -o \"{_outputDirectory}\" --png \"{graphFileName}\"";
-            var expectedFilePath = $"{graphFileName}{EXTENSION_PNG}";
+            var graphFilePath = WriteGraphFile(inputText);
+            var args = $"\"{mermaidPath}\" -o \"{_outputDirectory}\" --png \"{graphFilePath}\"";
+            var graphFileName = new FileInfo(graphFilePath).Name;
+            var expectedFilePath = Path.Combine(_outputDirectory, $"{graphFileName}{EXTENSION_PNG}");
 
             var result = RunCommand(args, expectedFilePath);
 
@@ -75,10 +90,10 @@
 
         #region "command execution"
 
-        private MermaidResult RunCommand(string args, string expectedFilePath)
+        private MermaidRenderResult RunCommand(string args, string expectedFilePath)
         {
-            string stdOut = null;
-            string stdErr = null;
+            string stdOut;
+            string stdErr;
 
             var ps = new ProcessStartInfo(nodeCommandPath)
             {
@@ -97,7 +112,7 @@
                 p.WaitForExit();
             }
 
-            var result = new MermaidResult();
+            var result = new MermaidRenderResult();
 
             if (string.IsNullOrWhiteSpace(stdOut))
             {
@@ -153,12 +168,12 @@
         {
             if (_fileUtils == null)
             {
-                _fileUtils = new FileUtils(_outputDirectory);
+                _fileUtils = new FileUtils(_outputDirectory, _graphFileDirectory);
             }
             return _fileUtils;
         }
 
-        private string WriteGraphTempFile(string inputText)
+        private string WriteGraphFile(string inputText)
         {
             var targetFilePath = GetFileUtils().GetTempFile("graph");
             File.WriteAllText(targetFilePath, inputText);

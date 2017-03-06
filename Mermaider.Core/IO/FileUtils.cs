@@ -1,22 +1,23 @@
-﻿using System.IO;
-
-namespace Mermaider.UI.IO
+﻿namespace Mermaider.Core.IO
 {
-    using System.Collections.Generic;
+    using System.IO;
 
     /// <summary>
-    ///     General file utilisies
+    ///     General file utilities
     /// </summary>
+    /// <remarks>These are probably not necessary with .net core</remarks>
     public class FileUtils
     {
-        private string _tempPath;
+        private readonly string _renderedOutputDirectory;
+        private readonly string _graphFileDirectory;
 
-        public FileUtils(string tempPath)
+        public FileUtils(string renderedOutputDirectory, string graphFileDirectory)
         {
-            _tempPath = tempPath;
+            _renderedOutputDirectory = renderedOutputDirectory;
+            _graphFileDirectory = graphFileDirectory;
         }
 
-        public void CreateDir(params string[] directories)
+        public static void CreateDir(params string[] directories)
         {
             foreach (var dir in directories)
             {
@@ -38,7 +39,7 @@ namespace Mermaider.UI.IO
         public string GetTempFile(string extension = "tmp")
         {
             var testFilePath = $"{Path.GetRandomFileName()}.{extension}";
-            var targetFilePath = Path.Combine(_tempPath, testFilePath);
+            var targetFilePath = Path.Combine(_graphFileDirectory, testFilePath);
             return targetFilePath;
         }
 
@@ -46,13 +47,7 @@ namespace Mermaider.UI.IO
         {
             return File.ReadAllText(expectedFilePath);
         }
-
         
-
-        public void ClearFolderContents(string dierctory)
-        {
-            
-        }
 
     }
 }

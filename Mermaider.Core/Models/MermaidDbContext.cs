@@ -1,4 +1,4 @@
-﻿namespace Mermaider.UI.Models
+﻿namespace Mermaider.Core.Models
 {
     using Microsoft.EntityFrameworkCore;
 

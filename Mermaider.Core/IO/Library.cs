@@ -1,4 +1,4 @@
-﻿namespace Mermaider.UI.IO
+﻿namespace Mermaider.Core.IO
 {
     /// <summary>
     ///     Responsible for tracking files et.al
