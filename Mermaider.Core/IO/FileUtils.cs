@@ -1,23 +1,15 @@
 ﻿namespace Mermaider.Core.IO
 {
     using System.IO;
+    using Abstractions;
 
     /// <summary>
     ///     General file utilities
     /// </summary>
     /// <remarks>These are probably not necessary with .net core</remarks>
-    public class FileUtils
+    public class FileUtils : IFileUtils
     {
-        private readonly string _renderedOutputDirectory;
-        private readonly string _graphFileDirectory;
-
-        public FileUtils(string renderedOutputDirectory, string graphFileDirectory)
-        {
-            _renderedOutputDirectory = renderedOutputDirectory;
-            _graphFileDirectory = graphFileDirectory;
-        }
-
-        public static void CreateDir(params string[] directories)
+        public void CreateDir(params string[] directories)
         {
             foreach (var dir in directories)
             {
@@ -25,7 +17,7 @@
             }
         }
 
-        public static void ClearDir(params string[] directories)
+        public void ClearDir(params string[] directories)
         {
             foreach (var dir in directories)
             {
@@ -36,10 +28,10 @@
             }
         }
 
-        public string GetTempFile(string extension = "tmp")
+        public string GetTempFile(string targetDirectory, string extension = "tmp")
         {
             var testFilePath = $"{Path.GetRandomFileName()}.{extension}";
-            var targetFilePath = Path.Combine(_graphFileDirectory, testFilePath);
+            var targetFilePath = Path.Combine(targetDirectory, testFilePath);
             return targetFilePath;
         }
 
@@ -47,7 +39,15 @@
         {
             return File.ReadAllText(expectedFilePath);
         }
-        
 
+        public void WriteAllText(string filePath, string content)
+        {
+            File.WriteAllText(filePath, content);
+        }
+
+        public string PathCombine(string path1, string path2)
+        {
+            return Path.Combine(path1, path2);
+        }
     }
 }

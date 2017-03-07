@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="Less\reboot\mixins\" />
     <Folder Include="Models\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mermaider.Core\Mermaider.Core.csproj" />

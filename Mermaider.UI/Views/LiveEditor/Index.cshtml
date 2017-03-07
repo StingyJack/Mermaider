@@ -65,10 +65,10 @@ class F2 styled
                 </div>
             </div>
             <div class="row">
-                <div id="mermaidImageLinkContainer">
+                <div id="mermaidImageLinkContainer" style="display:none">
                     <a href="images/img.jpg" target="_blank">Link Goes Here</a>
                 </div>
-                <div id="mermaidRenderedImageContainer">
+                <div id="mermaidRenderedImageContainer" style="display:none">
                     <img src="images/img.png" alt="ShouldBeImage" />
                 </div>
             </div>
@@ -97,6 +97,9 @@ class F2 styled
         var parseable = mermaidAPI.parse(graphText);
         if (parseable) {
             var graph = mermaid.mermaidAPI.render(graphText);
+            $('#mermaidPreview').show();
+            $('#mermaidImageLinkContainer').hide();
+            $('#mermaidRenderedImageContainer').hide();
             $('#mermaidPreview').html(graph);
         }
         else{
@@ -118,11 +121,16 @@ class F2 styled
         cache: false,
         data: { graphText: graphText },
         success: function (renderResult) {
-            var link = '<a href="images/img.jpg" target="_blank">Link Goes Here</a>';
-            var imageLink = '<img src="images/img.png" alt="ShouldBeImage" />';
+
+            var link = '<a href="' + renderResult.imagePath + '" target="_blank">Open in new window</a>';
+            var imageLink = '<img src="' + renderResult.imagePath + '" alt="ShouldBeImage" />';
+
+            $('#mermaidPreview').hide();
+            $('#mermaidImageLinkContainer').show();
+            $('#mermaidRenderedImageContainer').show();
 
             $('#mermaidImageLinkContainer').html(link);
-            $('#mermaidRenderedImageContainer').html(link);
+            $('#mermaidRenderedImageContainer').html(imageLink);
             
         }
     });

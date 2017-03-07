@@ -9,7 +9,7 @@ namespace Mermaider.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class MermaidCallerTests
+    public class MermaidRendererTests
     {
         private const string SIMPLE_GRAPH = "graph TD \n\t A-->B";
         private readonly string _rootPath = AppContext.BaseDirectory + "\\outDir";
@@ -27,7 +27,6 @@ namespace Mermaider.Tests
             Assert.IsNull(result.ImagePath);
             Assert.IsNotNull(result.SvgContent);
             Assert.IsTrue(result.SvgContent.Length > 10);
-            FileUtils.ClearDir(_rootPath); //meh
         }
 
         [TestMethod]

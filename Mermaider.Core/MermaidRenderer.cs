@@ -12,7 +12,7 @@
     {
         #region "fields and consts"
 
-        private FileUtils _fileUtils;
+        protected IFileUtils _FileUtils;
         private readonly string _graphFileDirectory;
         private readonly string _outputDirectory;
         private readonly string nodeCommandPath = "node"; //assuming its in the system path
@@ -28,12 +28,12 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="outputDirectory"></param>
-        /// <param name="tempDir"></param>
-        public MermaidRenderer(string outputDirectory, string tempDir)
+        /// <param name="imageDirectory"></param>
+        /// <param name="graphFileDirectory"></param>
+        public MermaidRenderer(string imageDirectory, string graphFileDirectory)
         {
-            _outputDirectory = Path.GetFullPath(outputDirectory);
-            _graphFileDirectory = Path.GetFullPath(tempDir);
+            _outputDirectory = Path.GetFullPath(imageDirectory);
+            _graphFileDirectory = Path.GetFullPath(graphFileDirectory);
             if (Directory.Exists(_outputDirectory) == false)
             {
                 throw new DirectoryNotFoundException($"no {_outputDirectory} found");
@@ -43,7 +43,7 @@
                 throw new DirectoryNotFoundException($"no {_graphFileDirectory} found");
             }
         }
-
+        
         #endregion //#region  "initialization"
 
         #region "public members"
@@ -164,19 +164,19 @@
 
         #region "helpers"
 
-        protected virtual FileUtils GetFileUtils()
+        private IFileUtils GetFileUtils()
         {
-            if (_fileUtils == null)
+            if (_FileUtils == null)
             {
-                _fileUtils = new FileUtils(_outputDirectory, _graphFileDirectory);
+                _FileUtils = new FileUtils();
             }
-            return _fileUtils;
+            return _FileUtils;
         }
 
         private string WriteGraphFile(string inputText)
         {
-            var targetFilePath = GetFileUtils().GetTempFile("graph");
-            File.WriteAllText(targetFilePath, inputText);
+            var targetFilePath = GetFileUtils().GetTempFile(_graphFileDirectory);
+            GetFileUtils().WriteAllText(targetFilePath, inputText);
             return targetFilePath;
         }
 
