@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild='clean, repack-bootstrap, move-content-to-wwwroot' Clean='clean' ProjectOpened='clean' />
+﻿/// <binding AfterBuild='clean-target-outputs, move-content-to-wwwroot' Clean='clean-target-outputs' />
 /*
 This file is the main entry point for defining Gulp tasks and using Gulp plugins.
 Click here to learn more. https://go.microsoft.com/fwlink/?LinkId=518007
@@ -12,6 +12,7 @@ var rename = require("gulp-rename");
 var gless = require("gulp-less");
 var cleanCss = require("gulp-clean-css");
 var concatCss = require("gulp-concat-css");
+var runSequence = require("run-sequence");
 
 // Build Dependencies
 var browserify = require("gulp-browserify");
@@ -39,9 +40,9 @@ gulp.task("lint-scripts", function () {
         .pipe(jshint.reporter("default"));
 });
 
-// Cleanups
-gulp.task("clean", function () {
 
+
+gulp.task("clean-target-outputs", function () {
     return del([destScriptPath + "/**/*"
         , destCssPath + "/**/*"
         , "Less/reboot/mixin/*"
@@ -50,14 +51,13 @@ gulp.task("clean", function () {
         , "!less/reboot/bootstrap.less"]);
 });
 
-//push non-mofifying content 
 gulp.task("move-content-to-wwwroot", function () {
-    
+
     console.log(`moving scripts to ${destScriptPath}`);
     gulp.src(sourcePaths.scriptStuff)
         .pipe(debug())
         .pipe(gulp.dest(destScriptPath));
-    
+
     console.log(`moving css to ${destCssPath}`);
     gulp.src(sourcePaths.cssFiles)
         .pipe(debug())
@@ -68,8 +68,7 @@ gulp.task("move-content-to-wwwroot", function () {
 
 //this and the bootstrap compile doesn't need to happen every time
 
-gulp.task("browserify-mermaid", ["lint-scripts"], function () {
-//gulp.task('browserify-mermaid', function () {
+gulp.task("y-seldom-browserify-mermaid", ["lint-scripts"], function () {
     return gulp.src("scripts/mermaid.nodejs")
         .pipe(browserify({
             insertGlobals: true
@@ -78,23 +77,34 @@ gulp.task("browserify-mermaid", ["lint-scripts"], function () {
         .pipe(gulp.dest("scripts"));
 });
 
-gulp.task("refresh-bootstrap-sources",["refresh-bootstrap-sources-mixins"],function(){
 
-    return gulp.src( ["bower_components/bootstrap/less/*.less"])
+gulp.task("z-subtask-refresh-bootstrap-sources", function () {
+
+    return gulp.src(["bower_components/bootstrap/less/*.less"])
         .pipe(gulp.dest("less/reboot"));
 });
 
-gulp.task("refresh-bootstrap-sources-mixins", function(){
+gulp.task("z-subtask-refresh-bootstrap-sources-mixins", function () {
 
-    return gulp.src( ["bower_components/bootstrap/less/mixins/*.less"])
+    return gulp.src(["bower_components/bootstrap/less/mixins/*.less"])
         .pipe(gulp.dest("less/reboot/mixins"));
 });
 
 //just want a few bootstrap things, because it overrides stuff its not supposed to
-gulp.task("repack-bootstrap", ["refresh-bootstrap-sources"], function() {
-        
+gulp.task("z-subtask-repack-bootstrap", function () {
+
     return gulp.src("less/reboot/bootstrap.less")
         .pipe(gless())
         .pipe(gulp.dest("styles"));
+
+});
+
+
+gulp.task("y-seldom-recompile-bootstrap", function () {
+    runSequence("z-subtask-refresh-bootstrap-sources-mixins",
+        "z-subtask-refresh-bootstrap-sources",
+        "z-subtask-repack-bootstrap",
+        "clean-target-outputs");
+
 
 });
