@@ -1,5 +1,6 @@
 ﻿namespace Mermaider.Core
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -43,7 +44,7 @@
                 throw new DirectoryNotFoundException($"no {_graphFileDirectory} found");
             }
         }
-        
+
         #endregion //#region  "initialization"
 
         #region "public members"
@@ -62,7 +63,7 @@
             }
 
             result.SvgContent = GetFileUtils().GetFileContent(expectedFilePath);
-            
+
             return result;
         }
 
@@ -117,6 +118,12 @@
             if (string.IsNullOrWhiteSpace(stdOut))
             {
                 result.Errors.Add($"No StdOut from the command '{ps.FileName} {ps.Arguments}'");
+            }
+            else
+            {
+                var parsedDiags = RawResultParser.ParseStdOut(stdOut);
+                result.Diagnostics.AddRange(parsedDiags.Item1);
+                result.Errors.AddRange(parsedDiags.Item2);
             }
 
             //Trace.WriteLine($"stdOut: {stdOut}");
@@ -175,7 +182,7 @@
 
         private string WriteGraphFile(string inputText)
         {
-            var targetFilePath = GetFileUtils().GetTempFile(_graphFileDirectory);
+            var targetFilePath = GetFileUtils().GetTempFile(_graphFileDirectory, ".graph");
             GetFileUtils().WriteAllText(targetFilePath, inputText);
             return targetFilePath;
         }

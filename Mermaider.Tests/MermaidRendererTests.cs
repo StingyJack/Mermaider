@@ -4,7 +4,6 @@ namespace Mermaider.Tests
     using System.IO;
     using System.Linq;
     using Core;
-    using Core.IO;
     using Core.Utils;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

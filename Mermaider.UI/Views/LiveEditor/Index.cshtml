@@ -3,25 +3,20 @@
 *@
 @{
 }
-
 <script src="@Url.Content("~/js/mermaid.js")"></script>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12 center">
+<div>
+    <div class="leftColumn">
+        <div>
             <h2>Mermaidier</h2>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12 left">
-            <text class="text-muted">
+        <div>
+            <p class="">
                 Enter your flowchart here and click "Refresh Diagram" to redraw it
-            </text>
+            </p>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3">
 
+
+        <div>
             <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
 graph TD
     A-->B("<b>nice</b> <i>display</i> value")
@@ -47,52 +42,51 @@ class F2 styled
 
 
         </textarea>
-            <div>
-                <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
-            </div>
-
-            <div class="btn-toolbar">
-                <input type="button" value="Refresh Diagram" class="btn btn-primary" onclick="return attemptGraphRendering();" />
-                <input type="button" value="Render as Image" class="btn btn-primary" onclick="return renderAsImage();" />
-            </div>
-
         </div>
-        <div class="mermaidChartContainer">
-
-            <div class="row">
-                <div id="mermaidPreview" class="mermaid">
-                    Preview goes here
-                </div>
-            </div>
-            <div class="row">
-                <div id="mermaidImageLinkContainer" style="display:none">
-                    <a href="images/img.jpg" target="_blank">Link Goes Here</a>
-                </div>
-                <div id="mermaidRenderedImageContainer" style="display:none">
-                    <img src="images/img.png" alt="ShouldBeImage" />
-                </div>
-            </div>
-            <div class="row">
-                <div id="errParse" class="validation-summary-errors"></div>
-            </div>
+        <div>
+            <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
         </div>
+        <div class="btn-toolbar">
+            <input type="button" value="Refresh Diagram" class="btn btn-primary" onclick="return attemptSvgRendering();" />
+            <input type="button" value="Render as Image" class="btn btn-primary" onclick="return renderAsImage();" />
+        </div>
+        <div>
+            <details id="diagnosticsContainer" style="display: none">
+                <textarea id="diagnosticsInfo" class="mermaidDiagnostics" rows="20" >
+
+
+            </textarea>
+            </details>
+        </div>
+    </div>
+
+    <div class="mermaidChartContainer rightColumn">
+        <div id="mermaidPreview" class="mermaid">
+            @*Svg preview goes here*@
+        </div>
+        <div id="mermaidImageLinkContainer" class="btn-link" style="display: none">
+            @*Link to open in new window goes here*@
+        </div>
+        <div id="mermaidRenderedImageContainer" class="mermaidRenderedImageContainer" style="display: none">
+            @*viewable image goes here*@)
+        </div>
+        <div id="errParse" class="validation-summary-errors"></div>
     </div>
 </div>
 <script>
 
     var mermaidInitted = false;
 
-    function attemptGraphRendering() {
+    function attemptSvgRendering() {
 
-        if (mermaidInitted === false)
-        {
-            mermaid.init({ startOnLoad: false });
-            mermaid.parseError = function(err,hash){
+        if (mermaidInitted === false) {
+            //mermaid.init({ startOnLoad: false });
+            mermaid.parseError = function(err, hash) {
                 $('#errParse').value(err);
             };
             mermaidInitted = true;
         }
-        
+
         var graphText = $('#mermaidDataEntryField').val();
         var parseable = mermaidAPI.parse(graphText);
         if (parseable) {
@@ -101,10 +95,11 @@ class F2 styled
             $('#mermaidImageLinkContainer').hide();
             $('#mermaidRenderedImageContainer').hide();
             $('#mermaidPreview').html(graph);
-        }
-        else{
-            $('#errParse').value("Couldn't parse");
-
+            $('#diagnosticsContainer').show();
+            $('#diagnosticsInfo').val(mermaidAPI.parseError);
+        } else {
+            $('#diagnosticsContainer').show();
+            $('#errParse').value(mermaidAPI.parseError);
         }
     }
 
@@ -113,27 +108,31 @@ class F2 styled
         var graphText = $('#mermaidDataEntryField').val();
 
         $.ajax({
-        url: '@Url.Action("RenderAsPng", "LiveEditor")',
-        type: 'GET',
-        dataType: 'json',
-        // we set cache: false because GET requests are often cached by browsers
-        // IE is particularly aggressive in that respect
-        cache: false,
-        data: { graphText: graphText },
-        success: function (renderResult) {
+            url: '@Url.Action("RenderAsPng", "LiveEditor")',
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            data: { graphText: graphText },
+            success: function(renderResult) {
 
-            var link = '<a href="' + renderResult.imagePath + '" target="_blank">Open in new window</a>';
-            var imageLink = '<img src="' + renderResult.imagePath + '" alt="ShouldBeImage" />';
+                if (renderResult.isSuccessful) {
+                    var link = '<a href="' + renderResult.imagePath + '" target="_blank">Open in new window</a>';
+                    var imageLink = '<img src="' + renderResult.imagePath + '" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />';
 
-            $('#mermaidPreview').hide();
-            $('#mermaidImageLinkContainer').show();
-            $('#mermaidRenderedImageContainer').show();
+                    $('#mermaidPreview').hide();
+                    $('#mermaidImageLinkContainer').show();
+                    $('#mermaidRenderedImageContainer').show();
 
-            $('#mermaidImageLinkContainer').html(link);
-            $('#mermaidRenderedImageContainer').html(imageLink);
-            
-        }
-    });
+                    $('#mermaidImageLinkContainer').html(link);
+                    $('#mermaidRenderedImageContainer').html(imageLink);
+                    $('#diagnosticsContainer').show();
+                    $('#diagnosticsInfo').val(renderResult.diagnostics.join('\n'));
+                } else {
+                    $('#errParse').value(renderResult.errors.join('\n'));
+                }
+
+            }
+        });
     }
 
 </script>

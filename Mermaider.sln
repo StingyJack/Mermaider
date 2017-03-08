@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60E67BB9-4E71-43A7-B86C-2EF0AEAEA2BA}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		example diagnostic.txt = example diagnostic.txt
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 		WIP.md = WIP.md

@@ -13,6 +13,8 @@
     "gulp-browserify": "0.5.1",
     "gulp-uglify": "2.0.1",
     "gulp-jshint": "2.0.4",
+    "gulp-clean-css": "3.0.3", 
+    "gulp-concat-css": "2.3.0",
     "del": "2.2.2",
     "browserify": "14.1.0",
     "browserify-shim": "^3.8.0",
