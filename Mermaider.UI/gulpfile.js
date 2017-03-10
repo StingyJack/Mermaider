@@ -13,12 +13,9 @@ var gless = require("gulp-less");
 var cleanCss = require("gulp-clean-css");
 var concatCss = require("gulp-concat-css");
 var runSequence = require("run-sequence");
-
-// Build Dependencies
 var browserify = require("gulp-browserify");
 var uglify = require("gulp-uglify");
-
-// Dev dependencies
+//var pocoGen = require('gulp-typescript-cs-poco');
 var jshint = require("gulp-jshint");
 
 // Common Setups - this should be copying the site.css too.
@@ -27,20 +24,19 @@ var sourcePaths = {
     scriptStuff: ["scripts/**/*.js", "bower_components/jquery/dist/*.*"],
     allScriptStuff: [],
     cssFiles: ["node_modules/mermaid/dist/*.css", "styles/*.*"]
+
 };
 sourcePaths.allScriptStuff = sourcePaths.scriptStuff.concat(sourcePaths.typeScriptStuff);
+
 var destScriptPath = "wwwroot/js";
 var destCssPath = "wwwroot/css";
 
-
-// Tasks
+// Cleaning Tasks
 gulp.task("lint-scripts", function () {
     return gulp.src(sourcePaths.scriptStuff)
         .pipe(jshint())
         .pipe(jshint.reporter("default"));
 });
-
-
 
 gulp.task("clean-target-outputs", function () {
     return del([destScriptPath + "/**/*"
@@ -66,8 +62,7 @@ gulp.task("move-content-to-wwwroot", function () {
         .pipe(gulp.dest(destCssPath));
 });
 
-//this and the bootstrap compile doesn't need to happen every time
-
+//these dosnt need to happen every compile
 gulp.task("y-seldom-browserify-mermaid", ["lint-scripts"], function () {
     return gulp.src("scripts/mermaid.nodejs")
         .pipe(browserify({
@@ -77,7 +72,8 @@ gulp.task("y-seldom-browserify-mermaid", ["lint-scripts"], function () {
         .pipe(gulp.dest("scripts"));
 });
 
-
+//just want a few bootstrap things, because it overrides the mermaid chart
+// and there is no way to exclude specific elements. 
 gulp.task("z-subtask-refresh-bootstrap-sources", function () {
 
     return gulp.src(["bower_components/bootstrap/less/*.less"])
@@ -90,7 +86,6 @@ gulp.task("z-subtask-refresh-bootstrap-sources-mixins", function () {
         .pipe(gulp.dest("less/reboot/mixins"));
 });
 
-//just want a few bootstrap things, because it overrides stuff its not supposed to
 gulp.task("z-subtask-repack-bootstrap", function () {
 
     return gulp.src("less/reboot/bootstrap.less")
@@ -98,7 +93,6 @@ gulp.task("z-subtask-repack-bootstrap", function () {
         .pipe(gulp.dest("styles"));
 
 });
-
 
 gulp.task("y-seldom-recompile-bootstrap", function () {
     runSequence("z-subtask-refresh-bootstrap-sources-mixins",
@@ -108,3 +102,15 @@ gulp.task("y-seldom-recompile-bootstrap", function () {
 
 
 });
+
+//gulp.task("generate-poco",
+//    function () {
+//        return gulp.src("mermaider.core/MermaidRenderResult.cs")
+//            .pipe(debug())
+//            .pipe(pocoGen({
+//                ignoreMethods: true,
+//                definitionFile: true
+//            }))
+//            .pipe(debug())
+//            .pipe(gulp.dest("scripts/csPoco"));
+//    });

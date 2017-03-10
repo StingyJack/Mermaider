@@ -32,7 +32,10 @@
             var mc = new MermaidRenderer(_imageFilesDirectory, _graphFilesDirectory);
             var renderResult = mc.RenderAsImage(graphText);
             //need to Url-ize the path, and use the library
-            renderResult.ImagePath = Urlizer(renderResult.ImagePath);
+            if (renderResult.IsSuccessful)
+            {
+                renderResult.ImagePath = Urlizer(renderResult.ImagePath);
+            }
             return new JsonResult(renderResult);
         }
 

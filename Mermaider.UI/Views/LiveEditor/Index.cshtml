@@ -4,17 +4,15 @@
 @{
 }
 <script src="@Url.Content("~/js/mermaid.js")"></script>
-<div>
+<div class="container-fluid">
     <div class="leftColumn">
         <div>
+            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider" />
             <h2>Mermaidier</h2>
         </div>
         <div>
-            <p class="">
-                Enter your flowchart here and click "Refresh Diagram" to redraw it
-            </p>
+            <p class="">Enter your flowchart here...</p>
         </div>
-
 
         <div>
             <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
@@ -43,37 +41,52 @@ class F2 styled
 
         </textarea>
         </div>
-        <div>
+        <div class="btn-toolbar">
+            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger" />
+            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success" />
+            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary" />
+        </div>
+        <details id="diagnosticsContainer" style="display: none">
+            <summary>Diagnostic Information</summary>
+            <textarea id="diagnosticsInfo" class="mermaidDiagnostics" rows="20">
+
+
+                </textarea>
+        </details>
+    </div>
+    <div class=" rightColumn">
+        <div class="alignRight hardRight hardTop">
             <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
         </div>
-        <div class="btn-toolbar">
-            <input type="button" value="Refresh Diagram" class="btn btn-primary" onclick="return attemptSvgRendering();" />
-            <input type="button" value="Render as Image" class="btn btn-primary" onclick="return renderAsImage();" />
+        <div id="errorsContainer" style="display: none;">
+            <textarea id="errorsList" class="parseErrors"></textarea>
         </div>
-        <div>
-            <details id="diagnosticsContainer" style="display: none">
-                <textarea id="diagnosticsInfo" class="mermaidDiagnostics" rows="20" >
-
-
-            </textarea>
-            </details>
-        </div>
-    </div>
-
-    <div class="mermaidChartContainer rightColumn">
         <div id="mermaidPreview" class="mermaid">
             @*Svg preview goes here*@
         </div>
-        <div id="mermaidImageLinkContainer" class="btn-link" style="display: none">
+        <div id="mermaidImageLinkContainer" class="btn-toolbar" style="display: none">
             @*Link to open in new window goes here*@
         </div>
-        <div id="mermaidRenderedImageContainer" class="mermaidRenderedImageContainer" style="display: none">
+        <div id="mermaidRenderedImageContainer" style="display: none">
             @*viewable image goes here*@)
         </div>
-        <div id="errParse" class="validation-summary-errors"></div>
+
     </div>
 </div>
 <script>
+
+    $('#btnStartOver').click(function() {
+        return location.reload();
+    });
+
+    $('#btnRenderImage').click(function () {
+        return renderAsImage();
+    });
+
+    $('#btnRefreshPreview').click(function () {
+        return attemptSvgRendering();
+    });
+
 
     var mermaidInitted = false;
 
@@ -82,7 +95,7 @@ class F2 styled
         if (mermaidInitted === false) {
             //mermaid.init({ startOnLoad: false });
             mermaid.parseError = function(err, hash) {
-                $('#errParse').value(err);
+                $('#errParse').val(err + hash);
             };
             mermaidInitted = true;
         }
@@ -96,10 +109,11 @@ class F2 styled
             $('#mermaidRenderedImageContainer').hide();
             $('#mermaidPreview').html(graph);
             $('#diagnosticsContainer').show();
+            //mermaidAPI logs to the console.log. Try to redirect it if possible, or just add another property with the string[]
             $('#diagnosticsInfo').val(mermaidAPI.parseError);
         } else {
             $('#diagnosticsContainer').show();
-            $('#errParse').value(mermaidAPI.parseError);
+            $('#errorsList').val(mermaidAPI.parseError);
         }
     }
 
@@ -116,8 +130,10 @@ class F2 styled
             success: function(renderResult) {
 
                 if (renderResult.isSuccessful) {
-                    var link = '<a href="' + renderResult.imagePath + '" target="_blank">Open in new window</a>';
-                    var imageLink = '<img src="' + renderResult.imagePath + '" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />';
+                    var link = '<a href="' + renderResult.imagePath + '" class="btn-link" target="_blank">Open in new window</a>';
+                    var imageLink = '<img src="' +
+                        renderResult.imagePath +
+                        '" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />';
 
                     $('#mermaidPreview').hide();
                     $('#mermaidImageLinkContainer').show();
@@ -125,14 +141,35 @@ class F2 styled
 
                     $('#mermaidImageLinkContainer').html(link);
                     $('#mermaidRenderedImageContainer').html(imageLink);
-                    $('#diagnosticsContainer').show();
-                    $('#diagnosticsInfo').val(renderResult.diagnostics.join('\n'));
+                    reportDiagnostics(renderResult);
                 } else {
-                    $('#errParse').value(renderResult.errors.join('\n'));
+                    $('#mermaidPreview').hide();
+                    $('#mermaidImageLinkContainer').hide();
+                    $('#mermaidRenderedImageContainer').hide();
+                    reportDiagnostics(renderResult);
+                    reportErrors(renderResult);
                 }
 
             }
         });
     }
+
+    function reportDiagnostics(renderResult) {
+        $('#diagnosticsContainer').show();
+        $('#diagnosticsInfo').val(renderResult.diagnostics.join('\n'));
+    }
+
+    function reportErrors(renderResult) {
+        if (errors === undefined) {
+            $('#errorsContainer').hide();
+            $('#errorsList').val('');
+        } else {
+            $('#errorsContainer').show();
+            $('#errorsList').val(renderResult.errors.join('\n'));
+        }
+
+    }
+
+
 
 </script>

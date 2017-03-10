@@ -6,47 +6,42 @@
     font-family: 'Quicksand', sans-serif;
 }
 
-h2 {
-    font-family: 'Sofia', cursive;
+h2 { font-family: 'Sofia', cursive; }
+
+.headerIcon {
+    height:60px;
+    float:left;
+    padding-right:20px
 }
 
 /* Set padding to keep content from hitting the edges */
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
+
 input,
 select,
-textarea {
-    max-width: 280px;
-}
+textarea { max-width: 280px; }
 
 /* styles for validation helpers */
-.field-validation-error {
-    color: #b94a48;
-}
 
-.field-validation-valid {
-    display: none;
-}
+.field-validation-error { color: #b94a48; }
 
-input.input-validation-error {
-    border: 1px solid #b94a48;
-}
+.field-validation-valid { display: none; }
 
-input[type="checkbox"].input-validation-error {
-    border: 0 none;
-}
+input.input-validation-error { border: 1px solid #b94a48; }
 
-.validation-summary-errors {
-    color: #b94a48;
-}
+input[type="checkbox"].input-validation-error { border: 0 none; }
 
-.validation-summary-valid {
-    display: none;
-}
+.validation-summary-errors { color: #b94a48; }
+
+.validation-summary-valid { display: none; }
+
+.errorsContainer .parseErrors { color: #b94a48; }
 
 .mermaidDataEntryField {
     display: block;
@@ -68,46 +63,43 @@ input[type="checkbox"].input-validation-error {
     min-height: 30%;
 }
 
-.mermaidChartContainer {
-    
-    /*max-width: 600px;
-    min-width: 200px;*/
-    /*display: block;*/
-}
-
-/*
-    .mermaidRenderedImageContainer {
-    max-width: 100%;
-    max-height: 100%;
+.mermaidRenderedImageContainerImage {
+    margin: auto;
     display: block;
-    }
-*/
-    .mermaidRenderedImageContainerImage {
-        margin: auto;
-        display: block;
-        max-height:1200px;
-    }
-    
-
-.undoMargin {
-    margin: 0;
+    max-height: 1200px;
 }
 
-.padTop10 div {
-    padding-top: 10px;
-}
+
+.undoMargin { margin: 0; }
+
+.padTop10 div { padding-top: 10px; }
 
 .leftColumn {
-    float:left;
-    max-width: 50%;
-    padding-top: 10px;
-    
+    float: left;
+    max-width: 48%;
+    min-width: 30%;
 }
 
+.leftColumn div { padding-top: 10px; }
+
+.leftColumn details { padding-top: 60px; }
+
 .rightColumn {
-    float:right;
-    
-    max-width: 50%;
-    padding: 85px 0 0 25px;
-    
+    float: none;
+    min-width: 48%;
+    max-width: 80%;
+    padding: 40px 0 0 25px;
 }
+
+.alignRight { text-align: right; }
+.hardRight { position: absolute; right:10px;}
+.hardTop {
+    position: absolute;
+    top: 10px;
+}
+
+.alignLeft { text-align: left; }
+
+.btn-toolbar { float: right; }
+
+.btn-toolbar .btn { float: none; }
