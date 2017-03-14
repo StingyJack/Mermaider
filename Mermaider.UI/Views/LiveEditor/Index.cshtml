@@ -103,18 +103,25 @@ class F2 styled
         var graphText = $('#mermaidDataEntryField').val();
         var parseable = mermaidAPI.parse(graphText);
         if (parseable) {
-            var graph = mermaid.mermaidAPI.render(graphText);
-            $('#mermaidPreview').show();
-            $('#mermaidImageLinkContainer').hide();
-            $('#mermaidRenderedImageContainer').hide();
-            $('#mermaidPreview').html(graph);
-            $('#diagnosticsContainer').show();
-            //mermaidAPI logs to the console.log. Try to redirect it if possible, or just add another property with the string[]
-            $('#diagnosticsInfo').val(mermaidAPI.parseError);
+
+            var needsUniqueId = "render" + (Math.floor(Math.random() * 10000)).toString(); //should be 10K attempts before repeat
+
+            mermaid.mermaidAPI.render(needsUniqueId, graphText, mermaidApiRenderCallback);
+
         } else {
             $('#diagnosticsContainer').show();
             $('#errorsList').val(mermaidAPI.parseError);
         }
+    }
+
+    function mermaidApiRenderCallback(graph) {
+        $('#mermaidPreview').show();
+        $('#mermaidImageLinkContainer').hide();
+        $('#mermaidRenderedImageContainer').hide();
+        $('#mermaidPreview').html(graph);
+        $('#diagnosticsContainer').show();
+        //mermaidAPI logs to the console.log. Try to redirect it if possible, or just add another property with the string[]
+        $('#diagnosticsInfo').val(mermaidAPI.parseError);
     }
 
     function renderAsImage() {
