@@ -7,13 +7,12 @@
 <div class="container-fluid">
     <div class="leftColumn">
         <div>
-            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider" />
+            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider"/>
             <h2>Mermaidier</h2>
         </div>
         <div>
             <p class="">Enter your flowchart here...</p>
         </div>
-
         <div>
             <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
 graph TD
@@ -42,9 +41,9 @@ class F2 styled
         </textarea>
         </div>
         <div class="btn-toolbar">
-            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger" />
-            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success" />
-            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary" />
+            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger"/>
+            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success"/>
+            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary"/>
         </div>
         <details id="diagnosticsContainer" style="display: none">
             <summary>Diagnostic Information</summary>
@@ -70,7 +69,6 @@ class F2 styled
         <div id="mermaidRenderedImageContainer" style="display: none">
             @*viewable image goes here*@)
         </div>
-
     </div>
 </div>
 <script>
@@ -79,11 +77,11 @@ class F2 styled
         return location.reload();
     });
 
-    $('#btnRenderImage').click(function () {
+    $('#btnRenderImage').click(function() {
         return renderAsImage();
     });
 
-    $('#btnRefreshPreview').click(function () {
+    $('#btnRefreshPreview').click(function() {
         return attemptSvgRendering();
     });
 
@@ -100,11 +98,12 @@ class F2 styled
             mermaidInitted = true;
         }
 
-        var graphText = $('#mermaidDataEntryField').val();
-        var parseable = mermaidAPI.parse(graphText);
+        const graphText = $('#mermaidDataEntryField').val();
+        const parseable = mermaidAPI.parse(graphText);
         if (parseable) {
 
-            var needsUniqueId = "render" + (Math.floor(Math.random() * 10000)).toString(); //should be 10K attempts before repeat
+            const needsUniqueId = `render${(Math.floor(Math.random() * 10000)).toString()}`;
+//should be 10K attempts before repeat
 
             mermaid.mermaidAPI.render(needsUniqueId, graphText, mermaidApiRenderCallback);
 
@@ -126,7 +125,7 @@ class F2 styled
 
     function renderAsImage() {
 
-        var graphText = $('#mermaidDataEntryField').val();
+        const graphText = $('#mermaidDataEntryField').val();
 
         $.ajax({
             url: '@Url.Action("RenderAsPng", "LiveEditor")',
@@ -137,10 +136,10 @@ class F2 styled
             success: function(renderResult) {
 
                 if (renderResult.isSuccessful) {
-                    var link = '<a href="' + renderResult.imagePath + '" class="btn-link" target="_blank">Open in new window</a>';
-                    var imageLink = '<img src="' +
-                        renderResult.imagePath +
-                        '" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />';
+                    const imagePath = renderResult.localUrlImagePath;
+                    const link = `<a href="${imagePath}" class="btn-link" target="_blank">Open in new window</a>`;
+                    const imageLink = `<img src="${imagePath
+                        }" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />`;
 
                     $('#mermaidPreview').hide();
                     $('#mermaidImageLinkContainer').show();
@@ -176,7 +175,6 @@ class F2 styled
         }
 
     }
-
 
 
 </script>

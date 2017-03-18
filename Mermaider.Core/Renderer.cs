@@ -1,6 +1,5 @@
 ﻿namespace Mermaider.Core
 {
-    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -9,13 +8,12 @@
     using IO;
     using Utils;
 
-    public class MermaidRenderer : IMermaidRenderer
+    public class Renderer : IRenderer
     {
         #region "fields and consts"
 
         protected IFileUtils _FileUtils;
-        private readonly string _graphFileDirectory;
-        private readonly string _outputDirectory;
+        private readonly string _workingDirectory;
         private readonly string nodeCommandPath = "node"; //assuming its in the system path
         private readonly string mermaidPath = @"C:\Users\Andrew\AppData\Roaming\npm\node_modules\mermaid\bin\mermaid.js";
 
@@ -29,19 +27,14 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="imageDirectory"></param>
-        /// <param name="graphFileDirectory"></param>
-        public MermaidRenderer(string imageDirectory, string graphFileDirectory)
+        /// <param name="workingDirectory"></param>
+        public Renderer(string workingDirectory)
         {
-            _outputDirectory = Path.GetFullPath(imageDirectory);
-            _graphFileDirectory = Path.GetFullPath(graphFileDirectory);
-            if (Directory.Exists(_outputDirectory) == false)
+            _workingDirectory = Path.GetFullPath(workingDirectory);
+            
+            if (Directory.Exists(_workingDirectory) == false)
             {
-                throw new DirectoryNotFoundException($"no {_outputDirectory} found");
-            }
-            if (Directory.Exists(_graphFileDirectory) == false)
-            {
-                throw new DirectoryNotFoundException($"no {_graphFileDirectory} found");
+                throw new DirectoryNotFoundException($"no {_workingDirectory} found");
             }
         }
 
@@ -49,9 +42,9 @@
 
         #region "public members"
 
-        public MermaidRenderResult RenderAsSvg(string inputText)
+        public RenderResult RenderAsSvg(string fileName, string graphText)
         {
-            var graphFileName = WriteGraphFile(inputText);
+            var graphFileName = WriteGraphFile(fileName,graphText);
             var args = BuildMermaidArgs(graphFileName, MermaidOutput.Svg, false);
             var expectedFilePath = $"{graphFileName}{EXTENSION_SVG}";
 
@@ -68,12 +61,12 @@
         }
 
 
-        public MermaidRenderResult RenderAsImage(string inputText)
+        public RenderResult RenderAsImage(string fileName, string graphText)
         {
-            var graphFilePath = WriteGraphFile(inputText);
-            var args = $"\"{mermaidPath}\" -o \"{_outputDirectory}\" --png \"{graphFilePath}\"";
+            var graphFilePath = WriteGraphFile(fileName, graphText);
+            var args = $"\"{mermaidPath}\" -o \"{_workingDirectory}\" --png \"{graphFilePath}\"";
             var graphFileName = new FileInfo(graphFilePath).Name;
-            var expectedFilePath = Path.Combine(_outputDirectory, $"{graphFileName}{EXTENSION_PNG}");
+            var expectedFilePath = Path.Combine(_workingDirectory, $"{graphFileName}{EXTENSION_PNG}");
 
             var result = RunCommand(args, expectedFilePath);
 
@@ -82,7 +75,7 @@
                 return result;
             }
 
-            result.ImagePath = expectedFilePath;
+            result.LocalFileSystemImagePath = expectedFilePath;
 
             return result;
         }
@@ -91,7 +84,7 @@
 
         #region "command execution"
 
-        private MermaidRenderResult RunCommand(string args, string expectedFilePath)
+        private RenderResult RunCommand(string args, string expectedFilePath)
         {
             string stdOut;
             string stdErr;
@@ -102,7 +95,7 @@
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                WorkingDirectory = _outputDirectory,
+                WorkingDirectory = _workingDirectory,
                 CreateNoWindow = true
             };
 
@@ -113,7 +106,7 @@
                 p.WaitForExit();
             }
 
-            var result = new MermaidRenderResult();
+            var result = new RenderResult();
 
             if (string.IsNullOrWhiteSpace(stdOut))
             {
@@ -149,7 +142,7 @@
             {
                 sb.Append(" -v ");
             }
-            sb.Append($" -o \"{_outputDirectory}\" ");
+            sb.Append($" -o \"{_workingDirectory}\" ");
             switch (mermaidOutput)
             {
                 case MermaidOutput.Png:
@@ -180,10 +173,10 @@
             return _FileUtils;
         }
 
-        private string WriteGraphFile(string inputText)
+        private string WriteGraphFile(string fileName, string graphText)
         {
-            var targetFilePath = GetFileUtils().GetTempFile(_graphFileDirectory, ".graph");
-            GetFileUtils().WriteAllText(targetFilePath, inputText);
+            var targetFilePath = GetFileUtils().PathCombine(_workingDirectory, $"{fileName}.graph");
+            GetFileUtils().WriteAllText(targetFilePath, graphText);
             return targetFilePath;
         }
 

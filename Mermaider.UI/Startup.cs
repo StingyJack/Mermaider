@@ -1,19 +1,26 @@
 ﻿namespace Mermaider.UI
 {
-
+    using System;
+    using System.IO;
+    using Core.Abstractions;
+    using Core.IO;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
 
     public class Startup
     {
         public IConfigurationRoot Configuration { get; }
+        private IHostingEnvironment _hostingEnvironment;
 
         public Startup(IHostingEnvironment env)
         {
+            _hostingEnvironment = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
@@ -27,6 +34,21 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            var unsavedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, "unsavedGraphs");
+            var savedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, "savedGraphs");
+            new FileUtils().CreateDir(unsavedGraphFilesPath,savedGraphFilesPath);
+
+            var mgrConfig = new ManagerConfig
+            {
+                UnsavedGraphFilesPath = unsavedGraphFilesPath,
+                SavedGraphFilesPath = savedGraphFilesPath
+            };
+
+            var mgr = new Manager();
+            mgr.Configure(mgrConfig);
+            services.AddSingleton<IManager>(mgr);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +67,6 @@
             }
 
             app.UseStaticFiles();
-
 
             app.UseMvc(routes =>
             {

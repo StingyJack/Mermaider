@@ -7,9 +7,9 @@
     /// 
     /// </summary>
     /// <remarks></remarks>
-    internal class MermaidRendererMock : MermaidRenderer
+    internal class MermaidRendererMock : Renderer
     {
-        public MermaidRendererMock(IFileUtils fileUtils, string graphFilePath, string imageFilePath) : base(graphFilePath, imageFilePath)
+        public MermaidRendererMock(IFileUtils fileUtils, string graphFilePath, string imageFilePath) : base(graphFilePath)
         {
             _FileUtils = fileUtils;
         }

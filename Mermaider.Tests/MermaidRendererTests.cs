@@ -17,13 +17,13 @@ namespace Mermaider.Tests
         [TestMethod]
         public void GetSvg()
         {
-            var mc = new MermaidRenderer(_rootPath, _tempFolder);
+            var mc = new Renderer(_rootPath);
 
-            var result = mc.RenderAsSvg(SIMPLE_GRAPH);
+            var result = mc.RenderAsSvg("myFile", SIMPLE_GRAPH);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Errors.Any() == false, result.Errors.ToSingle());
-            Assert.IsNull(result.ImagePath);
+            Assert.IsNull(result.LocalFileSystemImagePath);
             Assert.IsNotNull(result.SvgContent);
             Assert.IsTrue(result.SvgContent.Length > 10);
         }
@@ -31,15 +31,15 @@ namespace Mermaider.Tests
         [TestMethod]
         public void GetImage()
         {
-            var mc = new MermaidRenderer(_rootPath, _tempFolder);
+            var mc = new Renderer(_rootPath);
 
-            var result = mc.RenderAsImage(SIMPLE_GRAPH);
+            var result = mc.RenderAsImage("myFile",SIMPLE_GRAPH);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Errors.Any() == false, result.Errors.ToSingle());
-            Assert.IsNotNull(result.ImagePath);
+            Assert.IsNotNull(result.LocalFileSystemImagePath);
             Assert.IsNull(result.SvgContent);
-            Assert.IsTrue(result.ImagePath.Length > 10);
+            Assert.IsTrue(result.LocalFileSystemImagePath.Length > 10);
         }
     }
 }
