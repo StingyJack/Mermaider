@@ -28,7 +28,7 @@
         public void Configure(ManagerConfig config)
         {
             _config = config;
-            _renderer = new Renderer(_config.UnsavedGraphFilesPath);
+            _renderer = new Renderer(_config.UnsavedGraphFilesPath, config.PathToNodeExe, config.PathToMermaidJsFile);
         }
 
 

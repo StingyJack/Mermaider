@@ -14,8 +14,8 @@
 
         protected IFileUtils _FileUtils;
         private readonly string _workingDirectory;
-        private readonly string nodeCommandPath = "node"; //assuming its in the system path
-        private readonly string mermaidPath = @"C:\Users\Andrew\AppData\Roaming\npm\node_modules\mermaid\bin\mermaid.js";
+        private readonly string _pathToNodeExe; 
+        private readonly string _pathToMermaidJs;
 
         public const string EXTENSION_SVG = ".svg";
         public const string EXTENSION_PNG = ".png";
@@ -28,13 +28,25 @@
         /// 
         /// </summary>
         /// <param name="workingDirectory"></param>
-        public Renderer(string workingDirectory)
+        public Renderer(string workingDirectory, string pathToNodeExe, string pathToMermaidJsFile)
         {
             _workingDirectory = Path.GetFullPath(workingDirectory);
             
             if (Directory.Exists(_workingDirectory) == false)
             {
                 throw new DirectoryNotFoundException($"no {_workingDirectory} found");
+            }
+
+            _pathToNodeExe = pathToNodeExe;
+            if (Path.IsPathRooted(_pathToNodeExe) && File.Exists(_pathToNodeExe) == false)
+            {
+                throw new FileNotFoundException($"node path '{_pathToNodeExe}' invalid");
+            }
+
+            _pathToMermaidJs = pathToMermaidJsFile;
+            if (Path.IsPathRooted(_pathToMermaidJs) && File.Exists(_pathToMermaidJs) == false)
+            {
+                throw new FileNotFoundException($"path to mermaid.js '{_pathToMermaidJs}' is invalid");
             }
         }
 
@@ -64,7 +76,7 @@
         public RenderResult RenderAsImage(string fileName, string graphText)
         {
             var graphFilePath = WriteGraphFile(fileName, graphText);
-            var args = $"\"{mermaidPath}\" -o \"{_workingDirectory}\" --png \"{graphFilePath}\"";
+            var args = $"\"{_pathToMermaidJs}\" -o \"{_workingDirectory}\" --png \"{graphFilePath}\"";
             var graphFileName = new FileInfo(graphFilePath).Name;
             var expectedFilePath = Path.Combine(_workingDirectory, $"{graphFileName}{EXTENSION_PNG}");
 
@@ -89,7 +101,7 @@
             string stdOut;
             string stdErr;
 
-            var ps = new ProcessStartInfo(nodeCommandPath)
+            var ps = new ProcessStartInfo(_pathToNodeExe)
             {
                 Arguments = args,
                 RedirectStandardError = true,
@@ -137,7 +149,7 @@
 
         private string BuildMermaidArgs(string graphFileName, MermaidOutput mermaidOutput, bool verbose)
         {
-            var sb = new StringBuilder($"\"{mermaidPath}\" ");
+            var sb = new StringBuilder($"\"{_pathToMermaidJs}\" ");
             if (verbose)
             {
                 sb.Append(" -v ");

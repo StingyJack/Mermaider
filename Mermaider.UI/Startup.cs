@@ -35,15 +35,16 @@
         {
             services.AddMvc();
 
-            var unsavedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, "unsavedGraphs");
-            var savedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, "savedGraphs");
+            var mgrConfig = new ManagerConfig();
+            Configuration.GetSection("ManagerConfig").Bind(mgrConfig);
+            
+            var unsavedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, mgrConfig.UnsavedGraphFilesPath);
+            var savedGraphFilesPath = Path.Combine(_hostingEnvironment.WebRootPath, mgrConfig.SavedGraphFilesPath);
             new FileUtils().CreateDir(unsavedGraphFilesPath,savedGraphFilesPath);
 
-            var mgrConfig = new ManagerConfig
-            {
-                UnsavedGraphFilesPath = unsavedGraphFilesPath,
-                SavedGraphFilesPath = savedGraphFilesPath
-            };
+            mgrConfig.UnsavedGraphFilesPath = unsavedGraphFilesPath;
+            mgrConfig.SavedGraphFilesPath = savedGraphFilesPath;
+            
 
             var mgr = new Manager();
             mgr.Configure(mgrConfig);

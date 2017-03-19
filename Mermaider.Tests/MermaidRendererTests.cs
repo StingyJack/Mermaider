@@ -17,7 +17,7 @@ namespace Mermaider.Tests
         [TestMethod]
         public void GetSvg()
         {
-            var mc = new Renderer(_rootPath);
+            var mc = new Renderer(_rootPath, "", "");
 
             var result = mc.RenderAsSvg("myFile", SIMPLE_GRAPH);
 
@@ -31,7 +31,7 @@ namespace Mermaider.Tests
         [TestMethod]
         public void GetImage()
         {
-            var mc = new Renderer(_rootPath);
+            var mc = new Renderer(_rootPath, "", "");
 
             var result = mc.RenderAsImage("myFile",SIMPLE_GRAPH);
 
