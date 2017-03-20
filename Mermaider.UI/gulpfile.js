@@ -15,19 +15,19 @@ var concatCss = require("gulp-concat-css");
 var runSequence = require("run-sequence");
 var browserify = require("gulp-browserify");
 var uglify = require("gulp-uglify");
-//var pocoGen = require('gulp-typescript-cs-poco');
+var webpack = require('webpack-stream');
 var jshint = require("gulp-jshint");
 
 // Common Setups - this should be copying the site.css too.
 var sourcePaths = {
-    typeScriptStuff: ["scripts/**/*.ts", "scripts/**/*.map"],
-    scriptStuff: ["scripts/**/*.js", "bower_components/jquery/dist/*.*"],
-    allScriptStuff: [],
+    typeScriptNonCompiledStuff: ["scripts/src/*.ts", "scripts/src/*.map"],
+    typeScriptCompiledStuff: ["scripts/src/*.js"],//, "scripts/src/*.map"],
+    scriptStuff: ["scripts/*.js", "bower_components/jquery/dist/*.*"],
     cssFiles: ["node_modules/mermaid/dist/*.css", "styles/*.*"]
 
 };
-sourcePaths.allScriptStuff = sourcePaths.scriptStuff.concat(sourcePaths.typeScriptStuff);
 
+var stagingScriptPath = "scripts";
 var destScriptPath = "wwwroot/js";
 var destCssPath = "wwwroot/css";
 
@@ -47,19 +47,31 @@ gulp.task("clean-target-outputs", function () {
         , "!less/reboot/bootstrap.less"]);
 });
 
-gulp.task("move-content-to-wwwroot", function () {
+gulp.task('repack-typescript',
+    function () {
+        return gulp.src(sourcePaths.typeScriptCompiledStuff)
+            .pipe(debug())
+            .pipe(browserify({
+                insertGlobals: true
+            }))
+            .pipe(debug())
+            .pipe(gulp.dest(stagingScriptPath));
+    });
 
-    console.log(`moving scripts to ${destScriptPath}`);
-    gulp.src(sourcePaths.scriptStuff)
+gulp.task("move-content-to-wwwroot", ["repack-typescript"], function () {
+
+
+    var task1 = gulp.src(sourcePaths.scriptStuff)
         .pipe(debug())
         .pipe(gulp.dest(destScriptPath));
 
-    console.log(`moving css to ${destCssPath}`);
-    gulp.src(sourcePaths.cssFiles)
+    var task2 = gulp.src(sourcePaths.cssFiles)
         .pipe(debug())
         .pipe(concatCss("bundled.css"))
         .pipe(debug())
         .pipe(gulp.dest(destCssPath));
+
+    return [task1, task2];
 });
 
 //these dosnt need to happen every compile

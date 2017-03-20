@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="leftColumn">
         <div>
-            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider"/>
+            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider" />
             <h2>Mermaidier</h2>
         </div>
         <div>
@@ -15,35 +15,13 @@
         </div>
         <div>
             <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
-graph TD
-    A-->B("<b>nice</b> <i>display</i> value")
-    B-->C{"with formatting?"}
-    C-->|Yes|D1["html creole and others"]
-    C-->|No|E2("or plain css styling")
-
-    subgraph This
-     D1-->E1("...or some other stuff")
-     E1-->F1((" if you feel like it"))
-    end
-
-    subgraph Or That
-     E2-->F2>"and weird shapes"]
-    end 
-
-    F1-->Z("the end")    
-    F2-->Z
-
-classDef styled fill:#f9f,stroke:#333,stroke-width:4px;
-
-class F2 styled
-
 
         </textarea>
         </div>
         <div class="btn-toolbar">
-            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger"/>
-            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success"/>
-            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary"/>
+            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger" />
+            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success" />
+            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary" />
         </div>
         <details id="diagnosticsContainer" style="display: none">
             <summary>Diagnostic Information</summary>
@@ -58,7 +36,7 @@ class F2 styled
             <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
         </div>
         <div id="errorsContainer" style="display: none;">
-            <textarea id="errorsList" class="parseErrors"></textarea>
+            <textarea id="errorsList" class="parseErrors" rows="10" cols="80"></textarea>
         </div>
         <div id="mermaidPreview" class="mermaid">
             @*Svg preview goes here*@
@@ -73,6 +51,11 @@ class F2 styled
 </div>
 <script>
 
+    //$(document).ready(function() {
+    //    App.startup();
+    //});
+    //app.startup();
+
     $('#btnStartOver').click(function() {
         return location.reload();
     });
@@ -85,18 +68,26 @@ class F2 styled
         return attemptSvgRendering();
     });
 
+    var config = {
+        startOnLoad: false
+    };
+    mermaid.initialize(config);
 
-    var mermaidInitted = false;
+    mermaid.parseError = function (err, hash) {
+        if (err === 0) {
+            $('#errorsContainer').hide();
+        }
+        else {
+            $('#errorsContainer').show();
+            $('#errorsList').val(err + hash);
+
+            $('#mermaidPreview').hide();
+            $('#mermaidImageLinkContainer').hide();
+            $('#mermaidRenderedImageContainer').hide();
+        }
+    };
 
     function attemptSvgRendering() {
-
-        if (mermaidInitted === false) {
-            //mermaid.init({ startOnLoad: false });
-            mermaid.parseError = function(err, hash) {
-                $('#errParse').val(err + hash);
-            };
-            mermaidInitted = true;
-        }
 
         const graphText = $('#mermaidDataEntryField').val();
         const parseable = mermaidAPI.parse(graphText);
@@ -108,12 +99,14 @@ class F2 styled
             mermaid.mermaidAPI.render(needsUniqueId, graphText, mermaidApiRenderCallback);
 
         } else {
-            $('#diagnosticsContainer').show();
-            $('#errorsList').val(mermaidAPI.parseError);
+            //$('#diagnosticsContainer').show();
+            $('#errorsContainer').show();
         }
     }
 
     function mermaidApiRenderCallback(graph) {
+        //$('#errorsContainer').hide();
+
         $('#mermaidPreview').show();
         $('#mermaidImageLinkContainer').hide();
         $('#mermaidRenderedImageContainer').hide();

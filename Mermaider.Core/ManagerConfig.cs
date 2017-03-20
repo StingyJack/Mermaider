@@ -1,4 +1,4 @@
-﻿namespace Mermaider.Core.IO
+﻿namespace Mermaider.Core
 {
     public class ManagerConfig
     {

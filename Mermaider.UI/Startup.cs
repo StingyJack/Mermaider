@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using Core;
     using Core.Abstractions;
     using Core.IO;
     using Microsoft.AspNetCore.Builder;

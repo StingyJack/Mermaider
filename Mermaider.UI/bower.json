@@ -6,6 +6,8 @@
     "jquery": "3.1.1",
     "jquery-validation": "1.16.0",
     "jquery-validation-unobtrusive": "3.2.6",
+    "jquery-ts": "2.1.1",
+    "requirejs": "2.1.1",
     "ripple": ""
   },
   "resolutions": {
