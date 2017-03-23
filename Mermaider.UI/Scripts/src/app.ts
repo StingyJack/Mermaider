@@ -1,46 +1,56 @@
-﻿import $ from "../../bower_components/jquery-ts/index";
+﻿/// <reference path="../mermaid.d.ts" />
+import $ from "../../bower_components/jquery-ts/index";
+import { GraphText } from "./GraphText";
+import { ErrorHandler } from "./ErrorHandler";
+import { PageControls } from "./Constants";
+import { RenderEngine } from "./RenderEngine";
+import { DisplayElements } from "./DisplayElements";
+import { DiagnosticsDisplay } from "./DiagnosticsDisplay";
+
+
+declare var mermaid: IMermaid;
+
 
 $(() => {
     App.startup();
 });
 
 class App {
-    
-    static graphText:GraphText;
+
+    //static mermaid: IMermaid;
+    static graphText: GraphText;
+    static errorHandler: ErrorHandler;
+    static renderEngine: RenderEngine;
+    static diagnosticsDisplay: DiagnosticsDisplay;
+    static displayElements: DisplayElements;
 
     static startup() {
-        this.graphText = new GraphText("#mermaidDataEntryField");
+        console.log("starting app...");
+
+        console.log("setting default graph text");
+        this.graphText = new GraphText(PageControls.dataEntryField);
         this.graphText.setDefaultText();
-    }
-}
 
-class GraphText {
-    constructor(public controlId: string) { }
+        console.log("creating error handler");
+        this.errorHandler = new ErrorHandler(PageControls.errorsContainer, PageControls.errorsList);
 
-    setDefaultText() {
-        const defaultText = "" +
-            "graph TD  	 \n" +
-            "    A-->B(\"<b>nice</b> <i>display</i> value\") 	 \n" +
-            "    B-->C{\"with formatting?\"} 	 \n" +
-            "    C-->|Yes|D1[\"html creole and others\"] 	 \n" +
-            "    C-->|No|E2(\"or plain css styling\") 	 \n" +
-            " 	 \n" +
-            "    subgraph This 	 \n" +
-            "     D1-->E1(\"...or some other stuff\") 	 \n" +
-            "     E1-->F1((\" if you feel like it\")) 	 \n" +
-            "    end 	 \n" +
-            " 	 \n" +
-            "    subgraph Or That 	 \n" +
-            "     E2-->F2>\"and weird shapes\"] 	 \n" +
-            "    end 	 \n" +
-            " 	 \n" +
-            "    F1-->Z(\"the end\") 	 \n" +
-            "    F2-->Z  	 \n" +
-            "  	 \n" +
-            "classDef styled fill:#f9f,stroke:#333,stroke-width:4px;  	 \n" +
-            "  	 \n" +
-            "class F2 styled";
-        
-        $(this.controlId).val(defaultText);
+        console.log("creating diagnostics display ");
+        this.diagnosticsDisplay = new DiagnosticsDisplay(PageControls.diagnosticsContainer,
+            PageControls.diagnosticsInfo);
+
+        console.log("creating display elements...");
+        this.displayElements = new DisplayElements(this.diagnosticsDisplay,
+            PageControls.svgPreviewContainer,
+            PageControls.openInNewWindowImageLinkContainer,
+            PageControls.renderedImageContainer,
+            mermaid);
+
+        console.log("creating render engine");
+        this.renderEngine = new RenderEngine(this.errorHandler, this.displayElements, this.diagnosticsDisplay);
+
+        $(PageControls.startOver).click(() => location.reload());
+        $(PageControls.renderImage).click(() => this.renderEngine.renderImage(this.graphText.getText()));
+        $(PageControls.refreshPreview).click(() => this.renderEngine.attemptSvgPreview(this.graphText.getText()));
+
     }
 }

@@ -257,3 +257,5 @@ ModelManifest.xml
 
 /Mermaider.UI/wwwroot/unsavedGraphs
 
+/Mermaider.UI/scripts/src/*.js
+/Mermaider.UI/scripts/src/*.js.map

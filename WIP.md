@@ -2,23 +2,20 @@ This app should provide mermaid text-to-image or text-to-svg conversion as well 
 or be a general static image host if there isnt one to forward the generated ones to.
 
 ## Working so far
--  live editor can do a graph exactly once before mermaid api shits the bed
+- Preview Graph works 
+- Render as Png works
 - can get output from unit test from the command line
 
 ## next up
- - figure out the "get image" link
+ - get the on page JS into typescript libs
  
 ## known broken
- - mermaid or browserify or someone shits the bed https://github.com/knsv/mermaid/issues/478
- - png button not wired
+ - not broken, but rendering via CLI takes a few seconds 
 
 ## Work in progress
-
-- flags for diag output, filter and parse
 - can edgejs work better for including node modules. maybe, but browserify is fine so far
 - needs user file handling
-  - "show my graphs"
-  - "search for graphs"
+  - "list my graphs"
   - "save work in progress"
   - "share graphs with others"
   - "collab edit"

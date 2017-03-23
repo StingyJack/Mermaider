@@ -21,12 +21,13 @@ var jshint = require("gulp-jshint");
 // Common Setups - this should be copying the site.css too.
 var sourcePaths = {
     typeScriptNonCompiledStuff: ["scripts/src/*.ts", "scripts/src/*.map"],
-    typeScriptCompiledStuff: ["scripts/src/*.js"],//, "scripts/src/*.map"],
-    scriptStuff: ["scripts/*.js", "bower_components/jquery/dist/*.*"],
+    typeScriptCompiledStuff: ["scripts/bin/scripts/src/*.*"],//, "scripts/src/*.map"],
+    scriptStuff: ["scripts/*.js"],//, "bower_components/jquery/dist/*.*"],
     cssFiles: ["node_modules/mermaid/dist/*.css", "styles/*.*"]
 
 };
 
+var typeScriptCompilePath = "Scripts/bin/scripts/src";
 var stagingScriptPath = "scripts";
 var destScriptPath = "wwwroot/js";
 var destCssPath = "wwwroot/css";
@@ -49,29 +50,39 @@ gulp.task("clean-target-outputs", function () {
 
 gulp.task('repack-typescript',
     function () {
-        return gulp.src(sourcePaths.typeScriptCompiledStuff)
+        return gulp.src(sourcePaths.typeScriptNonCompiledStuff)
             .pipe(debug())
             .pipe(browserify({
                 insertGlobals: true
             }))
             .pipe(debug())
-            .pipe(gulp.dest(stagingScriptPath));
+            .pipe(gulp.dest(typeScriptCompilePath));
     });
 
-gulp.task("move-content-to-wwwroot", ["repack-typescript"], function () {
+gulp.task("move-content-to-wwwroot", function () {
 
 
     var task1 = gulp.src(sourcePaths.scriptStuff)
         .pipe(debug())
         .pipe(gulp.dest(destScriptPath));
 
-    var task2 = gulp.src(sourcePaths.cssFiles)
+    var task2 = gulp.src(typeScriptCompilePath + "/*.js")
+        .pipe(debug())
+        .pipe(webpack({
+                "output": {
+                    "filename": "app.js"
+                }
+            }))
+            .pipe(debug())
+        .pipe(gulp.dest(destScriptPath));
+
+    var task3 = gulp.src(sourcePaths.cssFiles)
         .pipe(debug())
         .pipe(concatCss("bundled.css"))
         .pipe(debug())
         .pipe(gulp.dest(destCssPath));
 
-    return [task1, task2];
+    return [task1, task2, task3];
 });
 
 //these dosnt need to happen every compile

@@ -13,71 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\unsavedGraphFiles\**" />
+    <Content Remove="wwwroot\unsavedGraphFiles\**" />
+    <EmbeddedResource Remove="wwwroot\unsavedGraphFiles\**" />
+    <None Remove="wwwroot\unsavedGraphFiles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Styles\Site.css" />
-    <Content Include="wwwroot\unsavedGraphFiles\0cjybdlm.dhh..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\0i4p2xla.155..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\0yajeayq.por..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\0zb4ldab.142..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\22b5fgwc.lkf..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\2vjvnan5.j4a..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\3x2og4zm.mtx..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\43of2sw0.oqo..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\44p4qify.uuu..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\4br5imor.z5d.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\4mlhm3ix.an1..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\4rvprfn4.a4r.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\55ojsv5t.dqu..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\5joityma.cl4..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\5k0cjlr2.afs..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\5nuqd4mc.riu..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\bgalhyxd.w1e..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\cqn4g2dp.gxg..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\cui2tyfn.ltg..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\cwnnyzuh.kuv.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\czw1dtx3.11f..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\dgmfwgo3.btw..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\di0qpwxf.d5j..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\f0jxpqq1.l4u.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\f0kpwqht.tgl..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\fiwq5hwe.uv1..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\guc4vcxf.g2x..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\hmc2b5me.mbs..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\i00donhy.02a..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\icl33du4.ri3..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\imor0ksf.hvq..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\ithfff20.yx4..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\jf45sodi.qiv..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\kyijtpzn.3og.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\lgr5452k.xiv.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\mlvmuo4j.cdn..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\mmwp5frm.rwj..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\mvxm4mut.sjc..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\odpm3ehz.1dr.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\ohbezoay.afp..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\pefatfbh.sbc..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\pffbwg0u.yjz..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\pvphu1ip.are..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\qhgcn1hu.whx..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\qw4kucuk.tx1..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\rcfs0wap.aoy..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\rcv0bu1c.fzw..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\rpoh23n2.b4e..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\sfknznnp.jcf..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\tdotexto.fe1..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\uq1wdowy.5rt..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\uxh10ada.yvc..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\uzmuebzm.r1i..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\v4xlyr0f.opk..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\vzsib0eu.a0l.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\w4ck4zf4.jx0..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\wy2j0gsr.sue..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\xlrzv34h.hhj..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\y215ltbe.5sh..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\zn53wf2h.blz..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\znagluaa.d4v..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\zqyj0he4.0h2..graph" />
-    <Content Include="wwwroot\unsavedGraphFiles\zqykp0em.t4n.tmp" />
-    <Content Include="wwwroot\unsavedGraphFiles\zu2dna35.3xh..graph" />
   </ItemGroup>
 
   <ItemGroup>
@@ -93,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Less\reboot\mixins\" />
+    <Folder Include="Scripts\bin\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\unsavedGraphs\" />
     <Folder Include="wwwroot\savedGraphs\" />

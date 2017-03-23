@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "traceResolution": true,
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "listFiles": true,
+
+    "listEmittedFiles": true,
+    "outDir": "scripts/bin",
+    //"inlineSources": true,
+    //"outFile": "./bin/app.js",
+    "rootDirs": [ "node_modules", "bower_components" ],
+
+
+    //"paths": {
+    //  "*": [
+    //    "bower_components/*",
+    //    "*"
+    //  ]
+    //},
+
+    "module": "amd",
+    "target": "es5"
+
+  },
+  "files": [
+    "scripts/src/App.ts",
+    "scripts/src/Constants.ts",
+    "scripts/src/GraphText.ts",
+    "scripts/src/ErrorHandler.ts",
+    "scripts/src/RenderEngine.ts",
+    "scripts/src/DisplayElements.ts",
+    "scripts/src/DiagnosticsDisplay.ts",
+    "scripts/src/IRenderResult.ts"
+    //,"mermaid.d.ts"
+  ],
+  "compileOnSave": true
+ 
+  
+
+}

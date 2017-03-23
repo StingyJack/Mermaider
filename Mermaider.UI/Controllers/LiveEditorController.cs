@@ -31,7 +31,7 @@
             return View();
         }
 
-        [HttpGet]
+        
         //[ValidateAntiForgeryToken]
         public ActionResult RenderAsPng(string graphText)
         {

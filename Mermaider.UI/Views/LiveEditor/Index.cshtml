@@ -38,136 +38,20 @@
         <div id="errorsContainer" style="display: none;">
             <textarea id="errorsList" class="parseErrors" rows="10" cols="80"></textarea>
         </div>
-        <div id="mermaidPreview" class="mermaid">
+        <div id="svgPreviewContainer" class="mermaid">
             @*Svg preview goes here*@
         </div>
-        <div id="mermaidImageLinkContainer" class="btn-toolbar" style="display: none">
+        <div id="openInNewWindowImageLinkContainer" class="btn-toolbar" style="display: none">
             @*Link to open in new window goes here*@
         </div>
-        <div id="mermaidRenderedImageContainer" style="display: none">
+        <div id="renderedImageContainer" style="display: none">
             @*viewable image goes here*@)
         </div>
     </div>
 </div>
 <script>
-
-    //$(document).ready(function() {
-    //    App.startup();
-    //});
-    //app.startup();
-
-    $('#btnStartOver').click(function() {
-        return location.reload();
-    });
-
-    $('#btnRenderImage').click(function() {
-        return renderAsImage();
-    });
-
-    $('#btnRefreshPreview').click(function() {
-        return attemptSvgRendering();
-    });
-
     var config = {
         startOnLoad: false
     };
     mermaid.initialize(config);
-
-    mermaid.parseError = function (err, hash) {
-        if (err === 0) {
-            $('#errorsContainer').hide();
-        }
-        else {
-            $('#errorsContainer').show();
-            $('#errorsList').val(err + hash);
-
-            $('#mermaidPreview').hide();
-            $('#mermaidImageLinkContainer').hide();
-            $('#mermaidRenderedImageContainer').hide();
-        }
-    };
-
-    function attemptSvgRendering() {
-
-        const graphText = $('#mermaidDataEntryField').val();
-        const parseable = mermaidAPI.parse(graphText);
-        if (parseable) {
-
-            const needsUniqueId = `render${(Math.floor(Math.random() * 10000)).toString()}`;
-//should be 10K attempts before repeat
-
-            mermaid.mermaidAPI.render(needsUniqueId, graphText, mermaidApiRenderCallback);
-
-        } else {
-            //$('#diagnosticsContainer').show();
-            $('#errorsContainer').show();
-        }
-    }
-
-    function mermaidApiRenderCallback(graph) {
-        //$('#errorsContainer').hide();
-
-        $('#mermaidPreview').show();
-        $('#mermaidImageLinkContainer').hide();
-        $('#mermaidRenderedImageContainer').hide();
-        $('#mermaidPreview').html(graph);
-        $('#diagnosticsContainer').show();
-        //mermaidAPI logs to the console.log. Try to redirect it if possible, or just add another property with the string[]
-        $('#diagnosticsInfo').val(mermaidAPI.parseError);
-    }
-
-    function renderAsImage() {
-
-        const graphText = $('#mermaidDataEntryField').val();
-
-        $.ajax({
-            url: '@Url.Action("RenderAsPng", "LiveEditor")',
-            type: 'GET',
-            dataType: 'json',
-            cache: false,
-            data: { graphText: graphText },
-            success: function(renderResult) {
-
-                if (renderResult.isSuccessful) {
-                    const imagePath = renderResult.localUrlImagePath;
-                    const link = `<a href="${imagePath}" class="btn-link" target="_blank">Open in new window</a>`;
-                    const imageLink = `<img src="${imagePath
-                        }" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />`;
-
-                    $('#mermaidPreview').hide();
-                    $('#mermaidImageLinkContainer').show();
-                    $('#mermaidRenderedImageContainer').show();
-
-                    $('#mermaidImageLinkContainer').html(link);
-                    $('#mermaidRenderedImageContainer').html(imageLink);
-                    reportDiagnostics(renderResult);
-                } else {
-                    $('#mermaidPreview').hide();
-                    $('#mermaidImageLinkContainer').hide();
-                    $('#mermaidRenderedImageContainer').hide();
-                    reportDiagnostics(renderResult);
-                    reportErrors(renderResult);
-                }
-
-            }
-        });
-    }
-
-    function reportDiagnostics(renderResult) {
-        $('#diagnosticsContainer').show();
-        $('#diagnosticsInfo').val(renderResult.diagnostics.join('\n'));
-    }
-
-    function reportErrors(renderResult) {
-        if (errors === undefined) {
-            $('#errorsContainer').hide();
-            $('#errorsList').val('');
-        } else {
-            $('#errorsContainer').show();
-            $('#errorsList').val(renderResult.errors.join('\n'));
-        }
-
-    }
-
-
 </script>
