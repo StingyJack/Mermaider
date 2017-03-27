@@ -259,3 +259,5 @@ ModelManifest.xml
 
 /Mermaider.UI/scripts/src/*.js
 /Mermaider.UI/scripts/src/*.js.map
+/Mermaider.UI/Scripts/dist/bower_components
+/Mermaider.UI/Scripts/dist/scripts/src

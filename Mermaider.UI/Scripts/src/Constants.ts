@@ -1,6 +1,9 @@
 ﻿export namespace PageControls {
     //something to create constants from the page control names would be nice - gulpfile?
 
+    export const libraryTab = "#libraryTab";
+    export const editorTab = "#editorTab";
+
     export const startOver = "#btnStartOver";
     export const renderImage = "#btnRenderImage";
     export const refreshPreview = "#btnRefreshPreview";
@@ -11,9 +14,10 @@
     export const renderedImageContainer = "#renderedImageContainer";
 
     export const errorsContainer = "#errorsContainer";
-    export const errorsList = "#errorsList";
+    export const errorMessage = "#errorMessage";
 
     export const diagnosticsContainer = "#diagnosticsContainer";
     export const diagnosticsInfo = "#diagnosticsInfo";
  
 }
+

@@ -6,14 +6,26 @@ interface IMermaidAPI {
     
 }
 
+interface ILog {
+    log: (msg: string) => void;
+}
+
+
+
 interface IMermaid {
     initialize: (options: any) => void;
     mermaidAPI: IMermaidAPI;
+    Log: ILog;
 }
 
 declare module "mermaid" {
     let MermaidAll: IMermaid;
     export = MermaidAll;
+}
+
+declare module "Log" {
+    let Log: ILog;
+    export = Log;
 }
 
 /*
