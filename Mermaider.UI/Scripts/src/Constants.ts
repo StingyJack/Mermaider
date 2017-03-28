@@ -18,6 +18,11 @@
 
     export const diagnosticsContainer = "#diagnosticsContainer";
     export const diagnosticsInfo = "#diagnosticsInfo";
- 
+
+    export enum GraphDisplay {
+        None,
+        SvgPreview,
+        ImageRendered
+    };
 }
 

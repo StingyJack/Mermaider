@@ -13,12 +13,12 @@ var gless = require("gulp-less");
 var cleanCss = require("gulp-clean-css");
 var concatCss = require("gulp-concat-css");
 var runSequence = require("run-sequence");
-var browserify = require("gulp-browserify");
 var uglify = require("gulp-uglify");
 var webpack = require('webpack-stream');
 var jshint = require("gulp-jshint");
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
+var browserify = require("gulp-browserify");
 
 
 // Common Setups - this should be copying the site.css too.
@@ -138,15 +138,3 @@ gulp.task("y-seldom-recompile-bootstrap", function () {
 
 
 });
-
-//gulp.task("generate-poco",
-//    function () {
-//        return gulp.src("mermaider.core/MermaidRenderResult.cs")
-//            .pipe(debug())
-//            .pipe(pocoGen({
-//                ignoreMethods: true,
-//                definitionFile: true
-//            }))
-//            .pipe(debug())
-//            .pipe(gulp.dest("scripts/csPoco"));
-//    });

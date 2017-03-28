@@ -6,14 +6,16 @@ import { Logger } from "./Logger";
 
 export class DisplayController {
 
-    private fadeDelay = 300;
+    private fadeDelay = 600;
     private opacityDim = 0.5;
     private renderEngine: RenderEngine;
     private existingGraphIdent: string;
+    private graphDisplay: PageControls.GraphDisplay;
 
     constructor(private mermaid: any, private logger: Logger) {
 
         console.log("creating render engine");
+        this.graphDisplay = PageControls.GraphDisplay.None;
         this.renderEngine = new RenderEngine(() => this.errorHandler, logger);
 
         this.setDefaultText();
@@ -43,8 +45,9 @@ export class DisplayController {
                         this.showDiags(renderResult.diagnostics.join("\n"), true);
 
                     } else {
-                        this.dimGraphDisplayElements();
-                        
+                        this.dimElement(PageControls.openInNewWindowImageLinkContainer);
+                        this.dimElement(PageControls.renderedImageContainer);
+
                         this.showDiags(renderResult.diagnostics.join("\n"), true);
                         this.showErrors(renderResult.errors.join("\n"), true);
                     }
@@ -59,63 +62,51 @@ export class DisplayController {
     private renderSvgPreview(graphText: string) {
 
         this.logger.setCheckpoint("preview");
-        
-        const isDisplayingPreview = (this.existingGraphIdent === "preview");
-        const isDisplayingRenderedImage = (this.existingGraphIdent !== undefined);//starts with "render"
 
         //////////////////////////////////////////////////////
         //FIX The jerky animations to be consistent.
         //////////////////////////////////////////////////////
 
 
-
         //is this displaying a preview now?
-        if (isDisplayingPreview) {
+        if (this.graphDisplay === PageControls.GraphDisplay.SvgPreview) {
+
             //  yes - dim it and hide the rendered image display items
             this.dimElement(PageControls.svgPreviewContainer);
-            $(PageControls.openInNewWindowImageLinkContainer).hide();
-            $(PageControls.renderedImageContainer).hide();
-        } else if (isDisplayingRenderedImage) {
+            this.hideElement(PageControls.openInNewWindowImageLinkContainer);
+            this.hideElement(PageControls.renderedImageContainer);
+
+
+        } else if (this.graphDisplay === PageControls.GraphDisplay.ImageRendered) {
+
             // no - but a rendered image is displayed, dim those controls
+            this.hideElement(PageControls.svgPreviewContainer);
             this.dimElement(PageControls.openInNewWindowImageLinkContainer);
             this.dimElement(PageControls.renderedImageContainer);
         }
-        else {
-            //no - the handler will call show when appropriate.
-            $(PageControls.svgPreviewContainer).hide();
-        }
 
         const parseable = this.renderEngine.canParse(graphText);
-        const diags = this.logger.getLastOperationDiags("preview");
-        const logs = this.logger.getLastOperationLogLogs("preview");
+        
         if (parseable === false) {
-
-            this.showDiags(diags, true);
-            this.showErrors("Failed to render, check console.log", true);
-
-            if (this.existingGraphIdent != undefined) {
-                $(PageControls.svgPreviewContainer).fadeTo(this.fadeDelay, 0.2);
-            }
+            this.showErrors("Failed to parse, check console.log", true);
+            this.graphDisplay = PageControls.GraphDisplay.None;
             return;
         }
 
-        this.existingGraphIdent = "preview";
         this.renderEngine.renderPreview(graphText, (svgText) => this.handlePreviewResponse(svgText));
 
     }
 
     handlePreviewResponse(svgText: string) {
 
-        $(PageControls.svgPreviewContainer).hide(this.fadeDelay);
+        const diags = this.logger.getLastOperationDiags();
+        this.showDiags(diags, true);
+        this.graphDisplay = PageControls.GraphDisplay.SvgPreview;
         $(PageControls.svgPreviewContainer).html(svgText);
-        if ($(PageControls.svgPreviewContainer).css("opacity") === "1.0") {
-            $(PageControls.svgPreviewContainer).show();
-        } else {
-            $(PageControls.svgPreviewContainer).fadeIn(this.fadeDelay);
-        }
+        this.existingGraphIdent = "preview";
+        this.brightenElement(PageControls.svgPreviewContainer);
 
     }
-
 
     private hideAllGraphDisplayElements(fadeAll: boolean) {
 
@@ -130,13 +121,19 @@ export class DisplayController {
         }
     }
 
-    private dimGraphDisplayElements() {
-
-        $(PageControls.svgPreviewContainer).fadeOut(this.fadeDelay);
-        $(PageControls.openInNewWindowImageLinkContainer).fadeOut(this.fadeDelay);
-        $(PageControls.renderedImageContainer).fadeOut(this.fadeDelay);
+    private showElement(elementId: string): void {
+        const opa = parseFloat($(elementId).css("opacity")).toFixed(1);
+        if (opa !== "1.0") {
+            $(elementId).fadeIn();
+        } else {
+            $(elementId).show();
+        }
     }
 
+    private brightenElement(elementId: string): void {
+        $(elementId).fadeIn(this.fadeDelay);
+    }
+    
     private dimElement(elementId: string) {
         const isVisible = $(elementId).is(":visible");
         if (isVisible) {
@@ -144,11 +141,8 @@ export class DisplayController {
         }
     }
 
-    private fadeElement(elementId: string) {
-        const isVisible = $(elementId).is(":visible");
-        if (isVisible) {
-            $(elementId).fadeTo(this.fadeDelay, this.opacityDim);
-        }
+    private hideElement(elementId: string): void {
+        $(elementId).hide();
     }
 
     private showRenderedImage(hrefElement: string, imageElement: string) {
@@ -239,5 +233,6 @@ export class DisplayController {
 
         $(PageControls.dataEntryField).val(defaultText);
     }
+
 
 }

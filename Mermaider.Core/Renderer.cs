@@ -28,6 +28,8 @@
         /// 
         /// </summary>
         /// <param name="workingDirectory"></param>
+        /// <param name="pathToNodeExe"></param>
+        /// <param name="pathToMermaidJsFile"></param>
         public Renderer(string workingDirectory, string pathToNodeExe, string pathToMermaidJsFile)
         {
             _workingDirectory = Path.GetFullPath(workingDirectory);

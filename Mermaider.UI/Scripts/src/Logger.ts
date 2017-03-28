@@ -24,7 +24,7 @@ export class Logger {
         
     }
 
-    setCheckpoint(operationCheckpointId: string) {
+    setCheckpoint(operationCheckpointId: string = "") {
         this.clearDiags();
     }
 
@@ -33,14 +33,10 @@ export class Logger {
         Logger.operationLogs = [];
     }
 
-    getLastOperationDiags(operationCheckpointId: string): string[] {
+    getLastOperationDiags(operationCheckpointId: string = ""): string[] {
         return Logger.operationDiags;
     }
-
-    getLastOperationLogLogs(operationCheckpointId: string): string[] {
-        return Logger.operationLogs;
-    }
-
+    
     logIntercept(message?: string, ...optionalParams: any[]): void {
         Logger.operationLogs.push(message);
         Logger.originalLogLog.apply(console, arguments);
