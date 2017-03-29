@@ -30,6 +30,7 @@
     "scripts/src/RenderResult.ts",
     "scripts/src/ImageLibrary.ts",
     "scripts/src/IAction.ts"
+    //, "Scripts/src/jquery.hoverIntent.d.ts"
     //,"mermaid.d.ts"
   ],
   "compileOnSave": true

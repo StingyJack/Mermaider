@@ -7,7 +7,7 @@
     export const startOver = "#btnStartOver";
     export const renderImage = "#btnRenderImage";
     export const refreshPreview = "#btnRefreshPreview";
-
+    export const controlContainer = "#controlContainer";
     export const dataEntryField = "#mermaidDataEntryField";
     export const svgPreviewContainer = "#svgPreviewContainer";
     export const openInNewWindowImageLinkContainer = "#openInNewWindowImageLinkContainer";

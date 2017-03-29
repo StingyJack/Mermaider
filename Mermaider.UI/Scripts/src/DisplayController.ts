@@ -4,10 +4,14 @@ import { PageControls } from "./Constants";
 import { RenderResult } from "./RenderResult";
 import { Logger } from "./Logger";
 
+//import "hoverIntent";
+
 export class DisplayController {
 
     private fadeDelay = 600;
-    private opacityDim = 0.5;
+    private opacityDim = 0.2;
+    private zIndexActive = 10;
+    private zIndexInactive = 1;
     private renderEngine: RenderEngine;
     private existingGraphIdent: string;
     private graphDisplay: PageControls.GraphDisplay;
@@ -24,7 +28,20 @@ export class DisplayController {
     wireEvents() {
         $(PageControls.startOver).click(() => location.reload());
         $(PageControls.renderImage).click(() => this.renderImage(this.getChartText()));
-        $(PageControls.refreshPreview).click(() => this.renderSvgPreview(this.getChartText()));
+        $(PageControls.refreshPreview).click(() => {
+            this.dimElement(PageControls.controlContainer);
+            this.renderSvgPreview(this.getChartText());
+        });
+        $(PageControls.controlContainer).hover(() => {
+            var t = setTimeout(() => {
+                this.brightenElement(PageControls.controlContainer);}, 2000);
+            $(this).data('timeout', t);
+        },
+            () => {
+                clearTimeout($(this).data('timeout'));
+            }
+        );
+        $(PageControls.controlContainer).click(() => this.brightenElement(PageControls.controlContainer));
     }
 
     private renderImage(graphText: string) {
@@ -63,11 +80,6 @@ export class DisplayController {
 
         this.logger.setCheckpoint("preview");
 
-        //////////////////////////////////////////////////////
-        //FIX The jerky animations to be consistent.
-        //////////////////////////////////////////////////////
-
-
         //is this displaying a preview now?
         if (this.graphDisplay === PageControls.GraphDisplay.SvgPreview) {
 
@@ -86,7 +98,7 @@ export class DisplayController {
         }
 
         const parseable = this.renderEngine.canParse(graphText);
-        
+
         if (parseable === false) {
             this.showErrors("Failed to parse, check console.log", true);
             this.graphDisplay = PageControls.GraphDisplay.None;
@@ -124,16 +136,16 @@ export class DisplayController {
     private showElement(elementId: string): void {
         const opa = parseFloat($(elementId).css("opacity")).toFixed(1);
         if (opa !== "1.0") {
-            $(elementId).fadeIn();
+            $(elementId).fadeTo(this.fadeDelay, 1.0);
         } else {
             $(elementId).show();
         }
     }
 
     private brightenElement(elementId: string): void {
-        $(elementId).fadeIn(this.fadeDelay);
+        $(elementId).fadeTo(this.fadeDelay, 1.0);
     }
-    
+
     private dimElement(elementId: string) {
         const isVisible = $(elementId).is(":visible");
         if (isVisible) {

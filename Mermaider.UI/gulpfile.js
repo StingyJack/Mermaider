@@ -99,7 +99,7 @@ gulp.task("move-content-to-wwwroot", function () {
 });
 
 //these dosnt need to happen every compile
-gulp.task("y-seldom-browserify-mermaid", ["lint-scripts"], function () {
+gulp.task("y-seldom-browserify", ["lint-scripts"], function () {
     return gulp.src("scripts/mermaid.nodejs")
         .pipe(browserify({
             insertGlobals: true
