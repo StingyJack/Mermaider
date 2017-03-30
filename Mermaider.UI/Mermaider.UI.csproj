@@ -13,9 +13,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Scripts\bin\bower_components\**" />
+    <Compile Remove="Scripts\bin\scripts\**" />
+    <Compile Remove="Scripts\dist\bower_components\**" />
+    <Compile Remove="Scripts\dist\scripts\**" />
     <Compile Remove="wwwroot\unsavedGraphFiles\**" />
+    <Content Remove="Scripts\bin\bower_components\**" />
+    <Content Remove="Scripts\bin\scripts\**" />
+    <Content Remove="Scripts\dist\bower_components\**" />
+    <Content Remove="Scripts\dist\scripts\**" />
     <Content Remove="wwwroot\unsavedGraphFiles\**" />
+    <EmbeddedResource Remove="Scripts\bin\bower_components\**" />
+    <EmbeddedResource Remove="Scripts\bin\scripts\**" />
+    <EmbeddedResource Remove="Scripts\dist\bower_components\**" />
+    <EmbeddedResource Remove="Scripts\dist\scripts\**" />
     <EmbeddedResource Remove="wwwroot\unsavedGraphFiles\**" />
+    <None Remove="Scripts\bin\bower_components\**" />
+    <None Remove="Scripts\bin\scripts\**" />
+    <None Remove="Scripts\dist\bower_components\**" />
+    <None Remove="Scripts\dist\scripts\**" />
     <None Remove="wwwroot\unsavedGraphFiles\**" />
   </ItemGroup>
 
@@ -37,6 +53,7 @@
   <ItemGroup>
     <Folder Include="Less\reboot\mixins\" />
     <Folder Include="Scripts\bin\" />
+    <Folder Include="Scripts\dist\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\unsavedGraphs\" />
     <Folder Include="wwwroot\savedGraphs\" />

@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild='clean-target-outputs, move-content-to-wwwroot' Clean='clean-target-outputs' />
+﻿/// <binding BeforeBuild='clean-target-outputs' AfterBuild='repack-typescript, move-content-to-wwwroot' Clean='clean-target-outputs' />
 /*
 This file is the main entry point for defining Gulp tasks and using Gulp plugins.
 Click here to learn more. https://go.microsoft.com/fwlink/?LinkId=518007
@@ -13,21 +13,24 @@ var gless = require("gulp-less");
 var cleanCss = require("gulp-clean-css");
 var concatCss = require("gulp-concat-css");
 var runSequence = require("run-sequence");
-var browserify = require("gulp-browserify");
 var uglify = require("gulp-uglify");
 var webpack = require('webpack-stream');
 var jshint = require("gulp-jshint");
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
+var browserify = require("gulp-browserify");
+
 
 // Common Setups - this should be copying the site.css too.
 var sourcePaths = {
     typeScriptNonCompiledStuff: ["scripts/src/*.ts", "scripts/src/*.map"],
-    typeScriptCompiledStuff: ["scripts/bin/scripts/src/*.*"],//, "scripts/src/*.map"],
+    typeScriptCompiledStuff: ["scripts/dist/scripts/src/*.js"],//, "scripts/src/*.map"],
     scriptStuff: ["scripts/*.js"],//, "bower_components/jquery/dist/*.*"],
     cssFiles: ["node_modules/mermaid/dist/*.css", "styles/*.*"]
 
 };
 
-var typeScriptCompilePath = "Scripts/bin/scripts/src";
+var typeScriptCompilePath = "scripts/dist/";
 var stagingScriptPath = "scripts";
 var destScriptPath = "wwwroot/js";
 var destCssPath = "wwwroot/css";
@@ -42,21 +45,29 @@ gulp.task("lint-scripts", function () {
 gulp.task("clean-target-outputs", function () {
     return del([destScriptPath + "/**/*"
         , destCssPath + "/**/*"
+        , typeScriptCompilePath + "/**/*"
         , "Less/reboot/mixin/*"
         , "!Less/reboot/mixin/"
         , "less/reboot/*"
         , "!less/reboot/bootstrap.less"]);
 });
 
-gulp.task('repack-typescript',
+gulp.task("repack-typescript",
     function () {
-        return gulp.src(sourcePaths.typeScriptNonCompiledStuff)
+
+        return tsProject.src()
             .pipe(debug())
-            .pipe(browserify({
-                insertGlobals: true
-            }))
+            .pipe(tsProject())
             .pipe(debug())
             .pipe(gulp.dest(typeScriptCompilePath));
+
+        //return gulp.src(sourcePaths.typeScriptNonCompiledStuff)
+        //    .pipe(debug())
+        //    .pipe(browserify({
+        //        insertGlobals: true
+        //    }))
+        //    .pipe(debug())
+        //    .pipe(gulp.dest(typeScriptCompilePath));
     });
 
 gulp.task("move-content-to-wwwroot", function () {
@@ -66,14 +77,16 @@ gulp.task("move-content-to-wwwroot", function () {
         .pipe(debug())
         .pipe(gulp.dest(destScriptPath));
 
-    var task2 = gulp.src(typeScriptCompilePath + "/*.js")
+    var task2 = gulp.src(sourcePaths.typeScriptCompiledStuff)
         .pipe(debug())
         .pipe(webpack({
-                "output": {
-                    "filename": "app.js"
-                }
-            }))
-            .pipe(debug())
+            "output": {
+                filename: "app.js"
+
+            },
+            devtool: "source-map"
+        }))
+        .pipe(debug())
         .pipe(gulp.dest(destScriptPath));
 
     var task3 = gulp.src(sourcePaths.cssFiles)
@@ -86,7 +99,7 @@ gulp.task("move-content-to-wwwroot", function () {
 });
 
 //these dosnt need to happen every compile
-gulp.task("y-seldom-browserify-mermaid", ["lint-scripts"], function () {
+gulp.task("y-seldom-browserify", ["lint-scripts"], function () {
     return gulp.src("scripts/mermaid.nodejs")
         .pipe(browserify({
             insertGlobals: true
@@ -125,15 +138,3 @@ gulp.task("y-seldom-recompile-bootstrap", function () {
 
 
 });
-
-//gulp.task("generate-poco",
-//    function () {
-//        return gulp.src("mermaider.core/MermaidRenderResult.cs")
-//            .pipe(debug())
-//            .pipe(pocoGen({
-//                ignoreMethods: true,
-//                definitionFile: true
-//            }))
-//            .pipe(debug())
-//            .pipe(gulp.dest("scripts/csPoco"));
-//    });

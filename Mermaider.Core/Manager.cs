@@ -34,8 +34,10 @@
 
         public InProgressGraph RenderGraphForUser(GraphRequest request)
         {
-            var result = new InProgressGraph();
-            result.GraphId = $"{request.UserIdent}_{DateTime.Now.ToFileTime()}";
+            var result = new InProgressGraph
+            {
+                GraphId = $"{request.UserIdent}_{DateTime.Now.ToFileTime()}"
+            };
             switch (request.OutputType)
             {
                 case MermaidOutput.Png:

@@ -5,48 +5,58 @@
 }
 <script src="@Url.Content("~/js/mermaid.js")"></script>
 <div class="container-fluid">
-    <div class="leftColumn">
-        <div>
-            <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider" />
-            <h2>Mermaidier</h2>
-        </div>
-        <div>
-            <p class="">Enter your flowchart here...</p>
-        </div>
-        <div>
-            <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
-
-        </textarea>
-        </div>
-        <div class="btn-toolbar">
-            <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger" />
-            <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success" />
-            <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary" />
-        </div>
-        <details id="diagnosticsContainer" style="display: none">
-            <summary>Diagnostic Information</summary>
-            <textarea id="diagnosticsInfo" class="mermaidDiagnostics" rows="20">
+    <div id="editorTab">
+        <div class="leftColumn">
+            <div class="controlContainer" id="controlContainer">
+                <div>
+                    <img class="headerIcon" src="@Url.Content("~/images/mermaid-small.png")" alt="Mermaider"/>
+                    <h2>Mermaidier</h2>
+                    <p class="instructional">Enter your flowchart here...</p>
+                </div>
+                <div>
+                    <textarea id="mermaidDataEntryField" class="mermaidDataEntryField" rows="20">
+                    </textarea>
+                </div>
+                <div class="btn-toolbar" id="previewButtons" >
+                    <input type="button" id="btnStartOver" value="Start Over" class="btn btn-danger"/>
+                    <input type="button" id="btnRenderImage" value="Render Image" class="btn btn-success"/>
+                    <input type="button" id="btnRefreshPreview" value="Refresh Preview" class="btn btn-primary"/>
+                </div>
+            </div>
+            <div class="btn-toolbar" id="libraryButtons">
+                <input type="button" id="btnSavePng" value="Save Png to Library" class="btn btn-info" style="display: none"/>
+            </div>
+            <div style="display: none">
+                <a href="path/to/this/saved/image">Permalink to this image</a>
+            </div>
+            <details id="diagnosticsContainer" style="display: none">
+                <summary>Diagnostic Information</summary>
+                <textarea id="diagnosticsInfo" class="mermaidDiagnostics" rows="20">
 
 
                 </textarea>
-        </details>
+            </details>
+        </div>
+        <div class=" rightColumn">
+            <div class="alignRight hardRight hardTop">
+                <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
+            </div>
+            <div id="errorsContainer" style="display: none;">
+                <div id="errorMessage" class="parseErrors">An error occured while parsing, please check the console.log (F12, or developer tools) for more detail</div>
+                <div id="errorDetail" style="display: none;"></div>
+            </div>
+            <div id="svgPreviewContainer" class="mermaid svgPreviewContainer" style="display: none">
+                @*Svg preview goes here*@
+            </div>
+            <div id="openInNewWindowImageLinkContainer" class="btn-toolbar" style="display: none">
+                @*Link to open in new window goes here*@
+            </div>
+            <div id="renderedImageContainer" style="display: none">
+                @*viewable image goes here*@)
+            </div>
+        </div>
     </div>
-    <div class=" rightColumn">
-        <div class="alignRight hardRight hardTop">
-            <a href="http://knsv.github.io/mermaid/#flowcharts-basic-syntax5">Need help? Flowchart Syntax here</a>
-        </div>
-        <div id="errorsContainer" style="display: none;">
-            <textarea id="errorsList" class="parseErrors" rows="10" cols="80"></textarea>
-        </div>
-        <div id="svgPreviewContainer" class="mermaid">
-            @*Svg preview goes here*@
-        </div>
-        <div id="openInNewWindowImageLinkContainer" class="btn-toolbar" style="display: none">
-            @*Link to open in new window goes here*@
-        </div>
-        <div id="renderedImageContainer" style="display: none">
-            @*viewable image goes here*@)
-        </div>
+    <div id="libraryTab">
     </div>
 </div>
 <script>

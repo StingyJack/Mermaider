@@ -5,16 +5,12 @@
     "noEmitOnError": true,
     "sourceMap": true,
     "allowJs": true,
-    "baseUrl": ".",
+    //"baseUrl": ".",
     "listFiles": true,
-
     "listEmittedFiles": true,
-    "outDir": "scripts/bin",
-    //"inlineSources": true,
-    //"outFile": "./bin/app.js",
-    "rootDirs": [ "node_modules", "bower_components" ],
-
-
+    "outDir": "./scripts/dist",
+    //"rootDirs": [ "node_modules", "bower_components" ],
+    "rootDir": "",
     //"paths": {
     //  "*": [
     //    "bower_components/*",
@@ -23,18 +19,18 @@
     //},
 
     "module": "amd",
-    "target": "es5"
+    "target": "es6"
 
   },
   "files": [
     "scripts/src/App.ts",
     "scripts/src/Constants.ts",
-    "scripts/src/GraphText.ts",
-    "scripts/src/ErrorHandler.ts",
     "scripts/src/RenderEngine.ts",
-    "scripts/src/DisplayElements.ts",
-    "scripts/src/DiagnosticsDisplay.ts",
-    "scripts/src/IRenderResult.ts"
+    "scripts/src/DisplayController.ts",
+    "scripts/src/RenderResult.ts",
+    "scripts/src/ImageLibrary.ts",
+    "scripts/src/IAction.ts"
+    //, "Scripts/src/jquery.hoverIntent.d.ts"
     //,"mermaid.d.ts"
   ],
   "compileOnSave": true
