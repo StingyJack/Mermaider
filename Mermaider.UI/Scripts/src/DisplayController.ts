@@ -25,20 +25,28 @@ export class DisplayController {
         this.setDefaultText();
     }
 
-    wireEvents() {
+    public wireEvents() {
         $(PageControls.startOver).click(() => location.reload());
-        $(PageControls.renderImage).click(() => this.renderImage(this.getChartText()));
-        $(PageControls.refreshPreview).click(() => {
+
+        $(PageControls.renderImage).click(() => {
             this.dimElement(PageControls.controlContainer);
+            event.stopImmediatePropagation();
+            this.renderImage(this.getChartText());
+        });
+
+        $(PageControls.refreshPreview).click((event) => {
+            this.dimElement(PageControls.controlContainer);
+            event.stopImmediatePropagation();
             this.renderSvgPreview(this.getChartText());
         });
         $(PageControls.controlContainer).hover(() => {
             var t = setTimeout(() => {
-                this.brightenElement(PageControls.controlContainer);}, 2000);
-            $(this).data('timeout', t);
+                this.brightenElement(PageControls.controlContainer);
+            }, 2000);
+            $(this).data("timeout", t);
         },
             () => {
-                clearTimeout($(this).data('timeout'));
+                clearTimeout($(this).data("timeout"));
             }
         );
         $(PageControls.controlContainer).click(() => this.brightenElement(PageControls.controlContainer));
@@ -46,74 +54,94 @@ export class DisplayController {
 
     private renderImage(graphText: string) {
         this.logger.setCheckpoint("image");
-        const parseable = this.renderEngine.canParse(graphText);
-        if (parseable) {
+        this.setDisplayElementsBeforeRenderAction();
 
-            this.renderEngine.renderImage(graphText,
-                (renderResult: RenderResult) => {
-                    if (renderResult.isSuccessful) {
-                        this.existingGraphIdent = renderResult.graphIdent;
-                        this.hideErrors(false);
-                        const imagePath = renderResult.localUrlImagePath;
-                        const link = `<a href="${imagePath}" class="btn-link" target="_blank">Open in new window</a>`;
-                        const imageLink = `<img src="${imagePath}" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />`;
+        const parseable = this.attemptParse(graphText);
 
-                        this.showRenderedImage(link, imageLink);
-                        this.showDiags(renderResult.diagnostics.join("\n"), true);
+        if (parseable === false) { return; }
 
-                    } else {
+
+        this.renderEngine.renderImage(graphText,
+            (renderResult: RenderResult) => {
+
+                if (renderResult.isSuccessful) {
+
+                    this.existingGraphIdent = renderResult.graphIdent;
+                    this.hideErrors(true);
+
+                    const imagePath = renderResult.localUrlImagePath;
+                    const link = `<a href="${imagePath}" class="btn-link" target="_blank">Open in new window</a>`;
+                    const imageLink = `<img src="${imagePath}" class="mermaidRenderedImageContainerImage" alt="ShouldBeImage" />`;
+
+                    this.showRenderedImage(link, imageLink);
+
+                } else {
+
+                    if (this.graphDisplay === PageControls.GraphDisplay.ImageRendered) {
+                        
                         this.dimElement(PageControls.openInNewWindowImageLinkContainer);
                         this.dimElement(PageControls.renderedImageContainer);
-
-                        this.showDiags(renderResult.diagnostics.join("\n"), true);
-                        this.showErrors(renderResult.errors.join("\n"), true);
                     }
-                });
+                    this.showErrors(renderResult.errors.join("\n"), true);
+                }
 
-        } else {
-            this.showErrors("Failed to render, check console.log", true);
-        }
+                this.showDiags(renderResult.diagnostics.join("\n"), true);
+            });
+
 
     }
 
     private renderSvgPreview(graphText: string) {
 
         this.logger.setCheckpoint("preview");
+        this.setDisplayElementsBeforeRenderAction();
 
-        //is this displaying a preview now?
-        if (this.graphDisplay === PageControls.GraphDisplay.SvgPreview) {
+        const parseable = this.attemptParse(graphText);
 
-            //  yes - dim it and hide the rendered image display items
-            this.dimElement(PageControls.svgPreviewContainer);
-            this.hideElement(PageControls.openInNewWindowImageLinkContainer);
-            this.hideElement(PageControls.renderedImageContainer);
-
-
-        } else if (this.graphDisplay === PageControls.GraphDisplay.ImageRendered) {
-
-            // no - but a rendered image is displayed, dim those controls
-            this.hideElement(PageControls.svgPreviewContainer);
-            this.dimElement(PageControls.openInNewWindowImageLinkContainer);
-            this.dimElement(PageControls.renderedImageContainer);
-        }
-
-        const parseable = this.renderEngine.canParse(graphText);
-
-        if (parseable === false) {
-            this.showErrors("Failed to parse, check console.log", true);
-            this.graphDisplay = PageControls.GraphDisplay.None;
-            return;
-        }
+        if (parseable === false) { return; }
 
         this.renderEngine.renderPreview(graphText, (svgText) => this.handlePreviewResponse(svgText));
 
     }
 
-    handlePreviewResponse(svgText: string) {
+    private setDisplayElementsBeforeRenderAction() {
 
-        const diags = this.logger.getLastOperationDiags();
-        this.showDiags(diags, true);
+        if (this.graphDisplay === PageControls.GraphDisplay.None) {
+            this.hideElement(PageControls.svgPreviewContainer, true);
+            this.hideElement(PageControls.openInNewWindowImageLinkContainer, true);
+            this.hideElement(PageControls.renderedImageContainer);
+        }
+        else if (this.graphDisplay === PageControls.GraphDisplay.SvgPreview) {
+            this.dimElement(PageControls.svgPreviewContainer);
+            this.hideElement(PageControls.openInNewWindowImageLinkContainer, true);
+            this.hideElement(PageControls.renderedImageContainer, true);
+        }
+        else if (this.graphDisplay === PageControls.GraphDisplay.ImageRendered) {
+            this.hideElement(PageControls.svgPreviewContainer, true);
+            this.dimElement(PageControls.openInNewWindowImageLinkContainer);
+            this.dimElement(PageControls.renderedImageContainer);
+        }
+    }
+
+    private attemptParse(graphText: string): boolean {
+        const parseable = this.renderEngine.canParse(graphText);
+
+        if (parseable === false) {
+            this.showErrors("Failed to parse, check console.log", true);
+            this.graphDisplay = PageControls.GraphDisplay.None;
+            return false;
+        }
+        return true;
+    }
+
+    private handlePreviewResponse(svgText: string) {
+
+        //no diags available for svg preview, console.log is the best I got for now.
+        //const diags = this.logger.getLastOperationDiags();
+        //this.showDiags(diags, true);
+
         this.graphDisplay = PageControls.GraphDisplay.SvgPreview;
+
         $(PageControls.svgPreviewContainer).html(svgText);
         this.existingGraphIdent = "preview";
         this.brightenElement(PageControls.svgPreviewContainer);
@@ -153,8 +181,12 @@ export class DisplayController {
         }
     }
 
-    private hideElement(elementId: string): void {
-        $(elementId).hide();
+    private hideElement(elementId: string, fade: boolean = false): void {
+        if (fade) {
+            $(elementId).fadeOut(this.fadeDelay);
+        } else {
+            $(elementId).hide();
+        }
     }
 
     private showRenderedImage(hrefElement: string, imageElement: string) {

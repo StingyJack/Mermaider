@@ -102,8 +102,9 @@ input[type="checkbox"].input-validation-error {
     min-height: 30%;
 }
 
-.svgPreviewContainer {
-    
+#previewButtons {
+    min-width: inherit;
+    padding-right: 20px;
 }
 
     
