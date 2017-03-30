@@ -29,7 +29,7 @@ I _really_ fucking hate Git version control. Right now, it wants me to commit ch
 a branch I dont want to instead of just switching out the base. Staging changes doesnt help, its just down to 
 me having to manually copy files around again. I don't get what is so appealing about convoluting something
 conceptually simple like safe source control. Please no git zealots. Go work with almost brainless easy TFVC, 
-SVN, and even VSS6 (ok, that's kind of low, but file corruption is as bad as not letting me commit).
+SVN, and even VSS6 for a bit first (ok, that last one is kind of low, but file corruption is as bad as not letting me commit).
 
 The moral of that rant is that if you want to submit a PR, and you forgot to branch before making 
 changes, that's just fine by me. I dont need or expect perfect commit histories, and amending or grooming 
