@@ -1,5 +1,5 @@
 # Mermaider
-An Asp.net core 1.1.1 (Mermaid)[https://github.com/knsv/mermaid] chart authoring page. It can provide 
+An Asp.net core 1.1.1 [Mermaid](https://github.com/knsv/mermaid) chart authoring page. It can provide 
 on page previews in svg with limited diagnostics, or png images by server side rendering. 
 
 It will have some library function to hold the charts and images so they can be referenced by other stuff, 
