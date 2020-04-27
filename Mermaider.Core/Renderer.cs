@@ -48,7 +48,7 @@
             _pathToMermaidJs = pathToMermaidJsFile;
             if (Path.IsPathRooted(_pathToMermaidJs) && File.Exists(_pathToMermaidJs) == false)
             {
-                throw new FileNotFoundException($"path to mermaid.js '{_pathToMermaidJs}' is invalid");
+                throw new FileNotFoundException($"path to mermaid.js '{_pathToMermaidJs}' is invalid. Did you `npm install -g mermaid` yet?");
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿/// <reference path="../mermaid.d.ts" />
-import $ from "../../bower_components/jquery-ts/index";
+import $ from "../../node_modules/jquery-ts/index";
 import { PageControls } from "./Constants";
 import { RenderEngine } from "./RenderEngine";
 import { DisplayController } from "./DisplayController";

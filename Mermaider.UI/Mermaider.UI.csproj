@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <AssemblyTitle>Mernaider.UI</AssemblyTitle>
-    <TargetFramework>netcoreapp1.1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>Mermaider.UI</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Mermaider.UI</PackageId>
     <RuntimeIdentifiers>win7-x64;win7-x64;ubuntu.16.04-x64</RuntimeIdentifiers>
-    <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
+    <!--<RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>-->
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
 

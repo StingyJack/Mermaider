@@ -1,4 +1,4 @@
-﻿import $ from "../../bower_components/jquery-ts/index";
+﻿import $ from "../../node_modules/jquery-ts/index";
 import { PageControls } from "./Constants";
 import { DisplayController } from "./DisplayController";
 import { RenderResult } from "./RenderResult";

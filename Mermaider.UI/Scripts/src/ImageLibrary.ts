@@ -1,4 +1,4 @@
-﻿import $ from "../../bower_components/jquery-ts/index";
+﻿import $ from "../../node_modules/jquery-ts/index";
 
 
 export class ImageLibrary {
