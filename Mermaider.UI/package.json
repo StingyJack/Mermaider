@@ -3,7 +3,7 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "mermaid": "7.0.0"
+    "mermaid": "8.7.0"
   },
   "devDependencies": {
     "gulp": "3.9.1",
